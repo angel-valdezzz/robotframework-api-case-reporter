@@ -7,13 +7,13 @@ registers its own listener and writes a report when the test finishes.
 ```robotframework
 *** Settings ***
 Library    RequestsLibrary
-Library    APICaseReporter    WITH NAME    Report
+Library    APICaseReporter
 
 *** Test Cases ***
 Example
     ${response}=    GET    http://localhost:8000/health    expected_status=anything
-    ${id}=    Report.Capture HTTP Exchange    Health    ${response}
-    Report.Check    ${id}    HTTP status
+    ${id}=    Capture HTTP Exchange    Health    ${response}
+    Check    ${id}    HTTP status
     ...    Should Be Equal As Integers    ${response.status_code}    200
 ```
 
@@ -32,11 +32,11 @@ from robot.api import logger
 from robot.api.deco import keyword, library
 from robot.libraries.BuiltIn import BuiltIn
 
-from .models import Case, Exchange, Validation
+from .models import Case, Exchange, ExecutionError, Validation
 from .redaction import Redactor
 from .render import write_report
 
-__version__ = "0.1.1"
+__version__ = "0.2.0"
 _HEADERS = "Authorization,Proxy-Authorization,Cookie,Set-Cookie,X-API-Key"
 _FIELDS = "access_token,refresh_token,client_secret,password,token,api_key"
 
@@ -59,12 +59,12 @@ class APICaseReporter:
         | Argument | Meaning |
         | --- | --- |
         | output_dir | Report directory; default is Robot's OUTPUT DIR/cases. |
-        | language | Interface language. Version 0.1 supports `en` only. |
+        | language | Interface language. Version 0.2 supports `en` only. |
         | redact_headers | Comma-separated header names; matched case-insensitively. |
         | redact_body_fields | Comma-separated JSON/form/query field names. |
 
         ```robotframework
-        Library    APICaseReporter    output_dir=${OUTPUT DIR}/cases    WITH NAME    Report
+        Library    APICaseReporter    output_dir=${OUTPUT DIR}/cases
         ```
 
         Metadata and validation labels retain the language provided by the caller.
@@ -73,7 +73,7 @@ class APICaseReporter:
         multipart request bodies are summarized instead of embedded.
         """
         if language != "en":
-            raise ValueError("Only language=en is supported in version 0.1.")
+            raise ValueError("Only language=en is supported in version 0.2.")
         self.ROBOT_LIBRARY_LISTENER = self
         self.output_dir = output_dir
         self.redact_headers = redact_headers
@@ -81,8 +81,12 @@ class APICaseReporter:
         self.case: Case | None = None
         self.redactor = Redactor(redact_headers, redact_body_fields)
         self.started_at = 0.0
+        self._checking = 0
+        self._failure_keywords: list[Any] = []
 
     def start_test(self, data: Any, result: Any) -> None:
+        self._checking = 0
+        self._failure_keywords = []
         self.redactor = Redactor(self.redact_headers, self.redact_body_fields)
         self.case = Case(
             name=data.name,
@@ -92,9 +96,36 @@ class APICaseReporter:
         )
         self.started_at = perf_counter()
 
+    def end_keyword(self, data: Any, result: Any) -> None:
+        """Record leaf failures outside Check without parsing Robot's message."""
+        if self.case is None or self._checking or result.status != "FAIL":
+            return
+        if any(getattr(item, "status", "") == "FAIL" for item in result.body):
+            return
+        # Keep result references until parents reach their final status. A failed
+        # keyword caught by TRY/EXCEPT or an error-handling keyword is not an
+        # unhandled execution error, even when a later step fails the same case.
+        self._failure_keywords.append(result)
+
     def end_test(self, data: Any, result: Any) -> None:
         case = self._current()
         case.status = result.status
+        if case.status == "FAIL":
+            for failed in self._failure_keywords:
+                parent = failed.parent
+                handled = False
+                while parent is not None and parent is not result:
+                    if getattr(parent, "status", "") == "PASS":
+                        handled = True
+                        break
+                    parent = parent.parent
+                if not handled:
+                    case.execution_errors.append(
+                        ExecutionError(
+                            keyword=self.redactor.text(failed.name),
+                            message=self.redactor.text(failed.message or "Keyword failed"),
+                        )
+                    )
         case.message = self.redactor.text(result.message or "")
         case.duration_ms = round((perf_counter() - self.started_at) * 1000, 2)
         output = self.output_dir or str(
@@ -125,7 +156,7 @@ class APICaseReporter:
         optional; no case ID or data row is required to generate a report.
 
         ```robotframework
-        Report.Set Case Metadata    case_id=DIST-002    environment=QA    data_row=2
+        Set Case Metadata    case_id=DIST-002    environment=QA    data_row=2
         ```
 
         Returns nothing. Raises an error outside an active test. Configured sensitive
@@ -143,8 +174,8 @@ class APICaseReporter:
 
         ```robotframework
         ${response}=    GET    ${URL}    expected_status=anything
-        ${id}=    Report.Capture HTTP Exchange    Consult distributor    ${response}
-        Report.Check    ${id}    Status
+        ${id}=    Capture HTTP Exchange    Consult distributor    ${response}
+        Check    ${id}    Status
         ...    Should Be Equal As Integers    ${response.status_code}    200
         ```
 
@@ -193,7 +224,7 @@ class APICaseReporter:
         arguments after `assertion_keyword` are forwarded unchanged.
 
         ```robotframework
-        Report.Check    ${id}    Distributor type
+        Check    ${id}    Distributor type
         ...    Should Be Equal As Strings    ${body}[tipoDistribuidor]    AGENTE
         ```
 
@@ -226,9 +257,12 @@ class APICaseReporter:
             arguments=self.redactor.clean(args),
         )
         exchange.validations.append(validation)
+        self._checking += 1
         try:
             return BuiltIn().run_keyword(assertion_keyword, *args)
         except Exception as error:
             validation.status = "FAIL"
             validation.error = self.redactor.text(str(error))
             raise
+        finally:
+            self._checking -= 1

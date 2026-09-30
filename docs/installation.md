@@ -1,34 +1,51 @@
 # Instalación
 
-Requisitos: Python 3.12 o superior y Robot Framework 7.5 o superior.
+Necesitas Python 3.12+ y Robot Framework 7.5+ dentro de la rama 7.x.
 
-## Desde PyPI
+## Instalar desde PyPI
 
-```bash
-python -m pip install robotframework-api-case-reporter==0.1.1 robotframework-requests
-# En Poetry:
-poetry add robotframework-api-case-reporter==0.1.1 robotframework-requests
-```
+=== "Poetry"
 
-## Desde WHL
+    ```bash
+    poetry add robotframework-api-case-reporter==0.2.0 robotframework-requests
+    poetry run robot --version
+    ```
 
-Descarga el archivo de PyPI o del artefacto `distribution` de GitHub Actions:
+=== "pip"
 
-```bash
-python -m pip install robotframework_api_case_reporter-0.1.1-py3-none-any.whl
-python -m pip install robotframework-requests
-```
+    ```bash
+    python -m pip install robotframework-api-case-reporter==0.2.0 robotframework-requests
+    python -m robot --version
+    ```
 
-También puedes agregar un WHL a tu proyecto Poetry:
+RequestsLibrary se instala por separado porque es quien ejecuta HTTP. La librería
+reportera registra la evidencia de los responses que le entregas.
 
-```bash
-poetry add ./robotframework_api_case_reporter-0.1.1-py3-none-any.whl
-```
+## Instalar un WHL
 
-El WHL incluye el template y los assets del reporte. No necesita MkDocs, Markdown,
-Ruff ni las dependencias de desarrollo para ejecutar los tests.
+Descarga la distribución desde [PyPI](https://pypi.org/project/robotframework-api-case-reporter/#files)
+o desde el artefacto `distribution` de GitHub Actions.
 
-## Desde el repositorio
+=== "Poetry"
+
+    ```bash
+    poetry add ./robotframework_api_case_reporter-0.2.0-py3-none-any.whl
+    poetry add robotframework-requests
+    ```
+
+=== "pip"
+
+    ```bash
+    python -m pip install ./robotframework_api_case_reporter-0.2.0-py3-none-any.whl
+    python -m pip install robotframework-requests
+    ```
+
+El WHL incluye la plantilla, CSS y JavaScript del reporte. MkDocs, Ruff y las
+herramientas de documentación no son necesarias para ejecutar tus pruebas.
+
+[Crear el primer caso](usage.md){ .md-button .md-button--primary }
+
+## Trabajar desde el código fuente
 
 ```bash
 git clone https://github.com/angel-valdezzz/robotframework-api-case-reporter.git
@@ -38,5 +55,4 @@ poetry install
 poetry build
 ```
 
-La versión 0.1.1 está publicada en PyPI mediante Trusted Publishing.
-No se necesita acceder a PyPI para instalar un WHL previamente descargado.
+Consulta el [flujo de desarrollo](development.md) antes de incorporar cambios.

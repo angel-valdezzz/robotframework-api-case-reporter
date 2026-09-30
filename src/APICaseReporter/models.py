@@ -31,6 +31,12 @@ class Exchange:
 
 
 @dataclass
+class ExecutionError:
+    keyword: str
+    message: str
+
+
+@dataclass
 class Case:
     name: str
     source: str
@@ -41,3 +47,4 @@ class Case:
     message: str = ""
     metadata: dict[str, Any] = field(default_factory=dict)
     exchanges: list[Exchange] = field(default_factory=list)
+    execution_errors: list[ExecutionError] = field(default_factory=list)

@@ -21,6 +21,7 @@ jobs:
       - run: poetry run ruff format --check .
       - run: poetry run mypy src
       - run: poetry run python scripts/verify.py
+      - run: poetry run python scripts/build_site.py
       - run: poetry build
       - run: poetry run twine check dist/*
       - run: poetry run python scripts/wheel_smoke.py

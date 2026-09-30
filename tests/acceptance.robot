@@ -57,6 +57,26 @@ Unknown request ID
 Skipped case
     Skip    Demonstrate a skipped report
 
+Timeout without response
+    [Tags]    expected-failure
+    GET    ${BASE_URL}/slow    timeout=0.01    expected_status=anything
+
+Handled error
+    TRY
+        Fail    Handled failure must not appear as an execution error
+    EXCEPT
+        No Operation
+    END
+
+Handled error then unhandled error
+    [Tags]    expected-failure
+    TRY
+        Fail    Handled failure must not appear as an execution error
+    EXCEPT
+        No Operation
+    END
+    Fail    Unhandled failure must appear
+
 Duplicate name
     No Operation
 

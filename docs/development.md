@@ -13,7 +13,7 @@ poetry run twine check dist/*
 poetry run python scripts/build_site.py
 ```
 
-Las pruebas usan Robot Framework, RequestsLibrary y una API en loopback. Cuatro casos
+Las pruebas usan Robot Framework, RequestsLibrary y una API en loopback. Seis casos
 fallan intencionalmente para verificar el estado final y sus evidencias. El verificador
 comprueba los resultados esperados y devuelve error si aparecen diferencias.
 
@@ -42,7 +42,7 @@ pull request y el check `verify`, sin aprobación externa obligatoria.
 
 ## Trusted Publishing
 
-La versión 0.1.1 se publicó mediante Trusted Publishing desde `release.yml`.
+La versión 0.2.0 se publicó mediante Trusted Publishing desde `release.yml`.
 Para configurar un publisher equivalente:
 
 | Campo | Valor |
@@ -55,7 +55,7 @@ Para configurar un publisher equivalente:
 
 El workflow ya utiliza OIDC y `pypa/gh-action-pypi-publish`, sin tokens guardados.
 Configurar el pending publisher no reserva el nombre. La publicación se ejecuta al
-publicar una release estable cuyo tag, por ejemplo `v0.1.1`, coincida con pyproject.toml.
+publicar una release estable cuyo tag, por ejemplo `v0.2.0`, coincida con pyproject.toml.
 
 El publisher inicial se registró sin restricción de environment (`Any`). El workflow
 usa el entorno `pypi`; se puede limitar el publisher a ese entorno.

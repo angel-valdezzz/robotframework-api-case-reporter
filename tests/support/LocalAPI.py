@@ -5,6 +5,7 @@ import re
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from threading import Thread
+from time import sleep
 from typing import Any
 
 from robot.api.deco import keyword, library
@@ -39,7 +40,13 @@ class LocalAPI:
 
             def do_GET(self) -> None:
                 path = self.path.split("?", 1)[0]
-                if path == "/broken":
+                if path == "/slow":
+                    sleep(0.2)
+                    try:
+                        self.send(200, {"ok": True})
+                    except (BrokenPipeError, ConnectionResetError):
+                        pass
+                elif path == "/broken":
                     self.send(502, b"upstream unavailable", "text/plain")
                 elif path == "/non-json":
                     self.send(200, b"not a JSON object", "application/json")

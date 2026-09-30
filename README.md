@@ -4,12 +4,12 @@ One standalone HTML evidence report per Robot Framework test case. Supports
 RequestsLibrary responses, multiple HTTP requests, business assertions, metadata,
 JSON formatting, request/response headers, Table/JSON and Copy.
 
-Version 0.1.1 targets Python 3.12+ and Robot Framework 7.5+. No pytest adapter.
+Version 0.2.0 targets Python 3.12+ and Robot Framework 7.5+. No pytest adapter.
 
 ## Install
 
 ```bash
-pip install robotframework-api-case-reporter==0.1.1
+pip install robotframework-api-case-reporter==0.2.0
 pip install robotframework-requests
 ```
 
@@ -24,13 +24,13 @@ RequestsLibrary is installed separately. The WHL can also be downloaded from PyP
 ```robotframework
 *** Settings ***
 Library    RequestsLibrary
-Library    APICaseReporter    WITH NAME    Report
+Library    APICaseReporter    
 
 *** Test Cases ***
 Example
     ${response}=    GET    ${BASE_URL}/health    expected_status=anything
-    ${id}=    Report.Capture HTTP Exchange    Health    ${response}
-    Report.Check    ${id}    HTTP status
+    ${id}=    Capture HTTP Exchange    Health    ${response}
+    Check    ${id}    HTTP status
     ...    Should Be Equal As Integers    ${response.status_code}    200
 ```
 
@@ -64,7 +64,7 @@ ignoring the Robot exit code. No live credentials or external endpoints are used
 - HTTP transport errors without a Response appear in the final case error, with no
   fabricated request. Keys missing before Check executes appear as Robot errors.
 - Pabot processes are supported with distinct output directories per worker. Sharing
-  one physical report directory across concurrent writers is not supported in 0.1.
+  one physical report directory across concurrent writers is not supported in 0.2.
 - Light/Dark control follows the system initially and remembers your choice when storage is available.
 - PASS, FAIL and SKIP use green, red and amber with distinct shades in both themes.
 
@@ -72,3 +72,10 @@ See the documentation for release workflow and Trusted Publisher configuration.
 
 Headers can be viewed as formatted JSON and copied with the copy icon. The clipboard
 and manual fallback both contain indented JSON with configured secrets masked.
+
+The report opens on Summary with request/assertion counters, a readable UTC date
+and case duration. Failures links each failed assertion to its request. Execution
+errors outside Check are recorded automatically; handled keyword failures are excluded.
+HTTP status colors describe the response class independently of PASS/FAIL assertions.
+
+Changes are integrated into main through pull requests with required CI checks.
