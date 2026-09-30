@@ -1,0 +1,38 @@
+name: Docs, Libdoc and live report
+on:
+  push:
+    branches: [dev]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: python -m pip install poetry==2.5.1
+      - run: poetry install --no-interaction
+      - run: poetry run python scripts/verify.py
+      - run: poetry run python scripts/build_site.py
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: site/
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

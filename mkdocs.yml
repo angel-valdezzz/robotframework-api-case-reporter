@@ -1,0 +1,38 @@
+site_name: API Case Reporter
+site_description: Reportes API independientes por caso de Robot Framework
+site_url: https://angel-valdezzz.github.io/robotframework-api-case-reporter/
+repo_url: https://github.com/angel-valdezzz/robotframework-api-case-reporter
+edit_uri: edit/dev/docs/
+theme:
+  name: material
+  language: es
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: cyan
+      toggle:
+        icon: material/weather-night
+        name: Modo oscuro
+    - scheme: slate
+      primary: indigo
+      accent: cyan
+      toggle:
+        icon: material/weather-sunny
+        name: Modo claro
+markdown_extensions:
+  - admonition
+  - tables
+  - pymdownx.highlight
+  - pymdownx.superfences
+nav:
+  - Inicio: index.md
+  - Instalación: installation.md
+  - Uso con Robot: usage.md
+  - Configuración: configuration.md
+  - Referencia de keywords: keywords/index.html
+  - Reporte de ejemplo: examples/report.html
+  - Publicación y desarrollo: development.md

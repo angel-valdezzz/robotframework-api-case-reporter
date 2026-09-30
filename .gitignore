@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+.mypy_cache/
+.ruff_cache/
+dist/
+site/
+build/
+results/
+*.egg-info/
+docs/keywords/index.html
+docs/examples/report.html
