@@ -31,3 +31,14 @@ Copy conserva los valores ocultos y ofrece selección manual si clipboard está 
 Pabot debe usar directorios distintos por worker: escribir concurrentemente en
 una misma carpeta no está soportado en 0.1. La integración externa del repositorio
 de ejemplos se realizará en una etapa posterior.
+
+## Tema y estados
+
+El HTML incluye un botón Light/Dark. Inicialmente sigue la preferencia del sistema;
+la elección se guarda cuando el navegador permite almacenamiento local. Sin ese
+permiso, el selector sigue funcionando para la página abierta. Todos los estilos
+y scripts quedan dentro del HTML, también cuando se abre sin conexión.
+PASS usa verde, FAIL rojo y SKIP ámbar, con tonos específicos para cada tema.
+
+Headers permite vista Table/JSON y copia JSON indentado mediante un icono accesible.
+La copia conserva los valores ocultos; el fallback manual también presenta JSON.

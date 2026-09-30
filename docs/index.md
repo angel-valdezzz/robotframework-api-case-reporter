@@ -13,6 +13,7 @@ un servidor de reportes y no tiene una integración con pytest.
 - [Referencia Libdoc](keywords/index.html): argumentos, ejemplos y errores de cada keyword.
 - [Reporte generado](examples/report.html): un caso real de la suite de aceptación
   contra una API ficticia local. Incluye dos requests y dos validaciones fallidas.
+  También puedes revisar un [caso SKIP](examples/skipped.html).
 
 ## Flujo
 

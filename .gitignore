@@ -10,3 +10,4 @@ results/
 *.egg-info/
 docs/keywords/index.html
 docs/examples/report.html
+docs/examples/skipped.html

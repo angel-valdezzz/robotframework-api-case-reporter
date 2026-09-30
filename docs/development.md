@@ -40,7 +40,7 @@ Pages usa un sitio por repositorio. Durante la primera etapa se despliega desde 
 
 ## Trusted Publishing
 
-La versión 0.1.0 se publicó mediante Trusted Publishing desde `release.yml`.
+La versión 0.1.1 se publicó mediante Trusted Publishing desde `release.yml`.
 Para configurar un publisher equivalente:
 
 | Campo | Valor |
@@ -53,7 +53,7 @@ Para configurar un publisher equivalente:
 
 El workflow ya utiliza OIDC y `pypa/gh-action-pypi-publish`, sin tokens guardados.
 Configurar el pending publisher no reserva el nombre. La publicación se ejecuta al
-publicar una release estable cuyo tag, por ejemplo `v0.1.0`, coincida con pyproject.toml.
+publicar una release estable cuyo tag, por ejemplo `v0.1.1`, coincida con pyproject.toml.
 
 El publisher inicial se registró sin restricción de environment (`Any`). El workflow
 usa el entorno `pypi`; se puede limitar el publisher a ese entorno.

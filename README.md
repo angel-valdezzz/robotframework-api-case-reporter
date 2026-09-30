@@ -2,20 +2,24 @@
 
 One standalone HTML evidence report per Robot Framework test case. Supports
 RequestsLibrary responses, multiple HTTP requests, business assertions, metadata,
-JSON formatting, request/response headers, Table/Raw and Copy.
+JSON formatting, request/response headers, Table/JSON and Copy.
 
-Version 0.1.0 targets Python 3.12+ and Robot Framework 7.5+. No pytest adapter.
+Version 0.1.1 targets Python 3.12+ and Robot Framework 7.5+. No pytest adapter.
 
 ## Install
 
 ```bash
-pip install robotframework-api-case-reporter==0.1.0
+pip install robotframework-api-case-reporter==0.1.1
 pip install robotframework-requests
 ```
 
-Published on PyPI: https://pypi.org/project/robotframework-api-case-reporter/0.1.0/
-You can also install the WHL downloaded from PyPI or CI artifacts. RequestsLibrary
-is installed separately.
+RequestsLibrary is installed separately. The WHL can also be downloaded from PyPI.
+
+[Manual de usuario](https://angel-valdezzz.github.io/robotframework-api-case-reporter/) ·
+[Referencia de keywords](https://angel-valdezzz.github.io/robotframework-api-case-reporter/keywords/) ·
+[Ejemplo en vivo](https://angel-valdezzz.github.io/robotframework-api-case-reporter/examples/report.html) ·
+[Paquete en PyPI](https://pypi.org/project/robotframework-api-case-reporter/) ·
+[Ejemplo ejecutable](https://github.com/angel-valdezzz/robot-api-case-report/tree/dev)
 
 ```robotframework
 *** Settings ***
@@ -50,10 +54,6 @@ Acceptance tests use Robot Framework and a loopback HTTP fixture. Some cases
 intentionally fail; scripts/verify.py checks their exact results instead of
 ignoring the Robot exit code. No live credentials or external endpoints are used.
 
-Documentation: https://angel-valdezzz.github.io/robotframework-api-case-reporter/
-
-Libdoc: the same site under `/keywords/`. Live example under `/examples/report.html`.
-
 ## Scope and limitations
 
 - Metadata is optional. Name, status and duration come from Robot.
@@ -65,6 +65,10 @@ Libdoc: the same site under `/keywords/`. Live example under `/examples/report.h
   fabricated request. Keys missing before Check executes appear as Robot errors.
 - Pabot processes are supported with distinct output directories per worker. Sharing
   one physical report directory across concurrent writers is not supported in 0.1.
-- Runnable example: https://github.com/angel-valdezzz/robot-api-case-report/tree/dev
+- Light/Dark control follows the system initially and remembers your choice when storage is available.
+- PASS, FAIL and SKIP use green, red and amber with distinct shades in both themes.
 
 See the documentation for release workflow and Trusted Publisher configuration.
+
+Headers can be viewed as formatted JSON and copied with the copy icon. The clipboard
+and manual fallback both contain indented JSON with configured secrets masked.
