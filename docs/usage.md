@@ -1,52 +1,83 @@
-# Uso con Robot Framework
+# Primer caso y varios requests
+
+Guarda este ejemplo como `tests/distributor.robot`. Sustituye la URL ficticia por
+la de tu servicio, o utiliza el [ejemplo ejecutable con API local](https://github.com/angel-valdezzz/robot-api-case-report/tree/dev).
 
 ```robotframework
 *** Settings ***
 Library    RequestsLibrary
-Library    APICaseReporter    WITH NAME    Report
+Library    APICaseReporter
+
+*** Variables ***
+${BASE_URL}    https://api.qa.example.test
 
 *** Test Cases ***
 Consultar distribuidor
-    Report.Set Case Metadata    case_id=DIST-001    environment=QA
+    Set Case Metadata    case_id=DIST-001    environment=QA
     ${response}=    GET    ${BASE_URL}/distribuidores/1042    expected_status=anything
-    ${id}=    Report.Capture HTTP Exchange    Consultar distribuidor    ${response}
-    Report.Check    ${id}    Verificar código HTTP
+    ${id}=    Capture HTTP Exchange    Consultar distribuidor    ${response}    # (1)!
+    Check    ${id}    Código HTTP
     ...    Should Be Equal As Integers    ${response.status_code}    200
-    ${body}=    Set Variable    ${response.json()}
-    Report.Check    ${id}    Verificar tipo distribuidor
+    VAR    ${body}    ${response.json()}    # (2)!
+    Verificar datos del distribuidor    ${id}    ${body}
+
+*** Keywords ***
+Verificar datos del distribuidor
+    [Arguments]    ${id}    ${body}
+    [Tags]    robot:continue-on-failure
+    Check    ${id}    Tipo de distribuidor
     ...    Should Be Equal As Strings    ${body}[tipoDistribuidor]    AGENTE
+    Check    ${id}    RFC con contenido
+    ...    Should Not Be Empty    ${body}[rfc]
 ```
 
-Ejecutar con `robot --outputdir results tests.robot`. El HTML aparecerá en
-`results/cases/Consultar_distribuidor.html`. No se requiere un listener por CLI.
+1. Captura antes de verificar el status o interpretar el body. Así una respuesta
+   HTTP inesperada conserva su evidencia. Cada captura devuelve un ID del caso.
+2. `VAR` y el acceso `${body}[clave]` permiten trabajar con los datos sin
+   `Set Variable` ni `Get From Dictionary` para estas operaciones.
 
-## Varios requests
+```bash
+poetry run robot --outputdir results tests/distributor.robot
+```
 
-Registra cada response (incluido el token) y conserva su ID. El ID asocia cada
-validación al request correcto; no se usa un “último request” implícito.
+El archivo queda en `results/cases/Consultar_distribuidor.html`.
+El título corresponde al nombre del test. Los nombres repetidos reciben sufijos
+`_2`, `_3`, etc.; los nombres de archivo se sanitizan y limitan en longitud.
 
-## Validaciones independientes
+## Asociar varias requests
 
-Agrupa las keywords de negocio bajo `[Tags]    robot:continue-on-failure` para
-completar sus comprobaciones y mantener FAIL si alguna falla. Los pasos de
-adquisición del token y consulta se mantienen fuera de ese grupo.
+Si primero obtienes un token y luego consultas un distribuidor, captura cada
+response y conserva ambos IDs. Usa el ID correspondiente en cada `Check`.
+No se asume un “último request” para asociar las assertions.
 
-`Check` admite BuiltIn y keywords propias. Devuelve el retorno normal de la assertion
-y propaga sus fallos; no convierte errores en PASS. Igualdad muestra Expected/Actual;
-keywords propias muestran sus argumentos y error. La keyword de ejemplo
-`Campo Debe Tener Contenido` se reconoce como comprobación de contenido no vacío.
+```robotframework
+*** Keywords ***
+Obtener token
+    VAR    &{form}    grant_type=client_credentials    client_secret=${CLIENT_SECRET}
+    ${response}=    POST    ${BASE_URL}/oauth/token
+    ...    data=${form}    expected_status=anything
+    ${id}=    Capture HTTP Exchange    Obtener token    ${response}
+    Check    ${id}    Código HTTP
+    ...    Should Be Equal As Integers    ${response.status_code}    200
+    VAR    ${body}    ${response.json()}
+    Check    ${id}    Token presente    Should Not Be Empty    ${body}[access_token]
+    RETURN    ${body}[access_token]
+```
 
-## DataDriver
+Este fragmento requiere `${BASE_URL}`, `${CLIENT_SECRET}` y las imports del primer
+bloque. Consulta la [configuración de datos sensibles](configuration.md).
 
-Cada test generado recibe su propio contexto y HTML. No es obligatorio enviar la
-fila del CSV como metadata. Nombres repetidos generan sufijos `_2`, `_3`, etc.
+!!! note "Continuación ante fallos"
+    `Check` registra el resultado y propaga el fallo normal de Robot. La etiqueta
+    `robot:continue-on-failure` permite ejecutar comprobaciones independientes
+    en una keyword de negocio. Evita aplicarla a pasos dependientes, como obtener
+    un token requerido para la siguiente petición.
 
-## Errores
+## Keywords propias
 
-Captura el response antes de verificar status o parsear JSON. Un 4xx/5xx o un body
-no JSON puede aparecer en el reporte. Un timeout o fallo de transporte sin response
-solo aparece en el error del caso. Una clave ausente que impida ejecutar `Check`
-aparece como error de Robot, sin sumar una validación que no se ejecutó.
+`Check` puede ejecutar assertions BuiltIn o keywords tuyas. Para las igualdades
+habituales muestra Expected/Actual; para una keyword personalizada muestra sus
+argumentos y error. Las comprobaciones no ejecutadas no se cuentan como SKIP.
 
-Solo registra intercambios capturados explícitamente. Importar RequestsLibrary no
-implica interceptar automáticamente todas sus peticiones.
+[Consultar keywords](keywords/index.html){ .md-button }
+[Usar DataDriver](datadriver.md){ .md-button }

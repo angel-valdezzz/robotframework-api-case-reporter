@@ -1,44 +1,48 @@
 # Configuración
 
+La configuración se proporciona al importar la librería. No necesita un alias.
+
 ```robotframework
+*** Settings ***
 Library    APICaseReporter
 ...    output_dir=${OUTPUT DIR}/cases
 ...    language=en
-...    redact_headers=Authorization,Cookie,Set-Cookie,X-API-Key
+...    redact_headers=Authorization,Proxy-Authorization,Cookie,Set-Cookie,X-API-Key
 ...    redact_body_fields=access_token,refresh_token,client_secret,password,token,api_key
-...    WITH NAME    Report
 ```
 
 | Parámetro | Comportamiento |
 |---|---|
-| output_dir | Por defecto, `OUTPUT DIR/cases`. |
-| language | Solo `en` en 0.1. Los nombres y labels conservan su idioma. |
-| redact_headers | Lista separada por comas, sin distinguir mayúsculas. Reemplaza la lista predeterminada. |
-| redact_body_fields | Campos JSON/form/query, incluyendo objetos anidados. Reemplaza la lista predeterminada. |
+| `output_dir` | Por defecto, `${OUTPUT DIR}/cases`. |
+| `language` | Solo `en` en 0.2; los nombres y labels conservan el idioma del test. |
+| `redact_headers` | Nombres separados por comas; no distingue mayúsculas. Reemplaza la lista predeterminada. |
+| `redact_body_fields` | Campos JSON/form/query, también anidados. Reemplaza la lista predeterminada. |
 
-Headers: Authorization, Proxy-Authorization, Cookie, Set-Cookie y X-API-Key se
-ocultan por defecto. También se ocultan valores sensibles ya conocidos en los
-mensajes y datos posteriores. Esto no reemplaza una clasificación de datos personales:
-agrega a la configuración los nombres sensibles que utilice tu API.
+## Datos sensibles
 
-La redacción aplica a **este HTML**. Los logs de Robot y RequestsLibrary son
-independientes y pueden contener los argumentos originales.
+Por defecto se ocultan Authorization, Proxy-Authorization, Cookie, Set-Cookie y
+X-API-Key, además de los campos del ejemplo. Los valores sensibles conocidos se
+ocultan también en mensajes y datos posteriores.
 
-Responses binarios se resumen con su tamaño. Bodies multipart no se incrustan.
-Headers Raw son texto `Nombre: valor`, no los bytes originales de la conexión.
-Copy conserva los valores ocultos y ofrece selección manual si clipboard está bloqueado.
+!!! warning "HTML y logs tienen configuraciones independientes"
+    La redacción aplica al HTML de esta librería. Los logs de Robot y
+    RequestsLibrary pueden contener los argumentos originales. Agrega los nombres
+    sensibles específicos de tu API y configura también el logging de tus pruebas.
 
-Pabot debe usar directorios distintos por worker: escribir concurrentemente en
-una misma carpeta no está soportado en 0.1. La integración externa del repositorio
-de ejemplos se realizará en una etapa posterior.
+Responses binarios se resumen con su tamaño. Los bodies multipart no se incrustan.
+La librería no mide el total de bytes transferidos por la conexión.
 
-## Tema y estados
+## Tema y copia de headers
 
-El HTML incluye un botón Light/Dark. Inicialmente sigue la preferencia del sistema;
-la elección se guarda cuando el navegador permite almacenamiento local. Sin ese
-permiso, el selector sigue funcionando para la página abierta. Todos los estilos
-y scripts quedan dentro del HTML, también cuando se abre sin conexión.
-PASS usa verde, FAIL rojo y SKIP ámbar, con tonos específicos para cada tema.
+El botón Light/Dark sigue inicialmente la preferencia del sistema. Cuando el
+navegador permite almacenamiento local, recuerda tu elección. CSS y JavaScript
+quedan incluidos en el HTML, sin dependencias de red.
 
-Headers permite vista Table/JSON y copia JSON indentado mediante un icono accesible.
-La copia conserva los valores ocultos; el fallback manual también presenta JSON.
+Headers ofrece **Table** y **JSON**. El icono de copia obtiene JSON indentado,
+con los valores sensibles ocultos. Si el navegador bloquea el clipboard, muestra
+un campo seleccionable con el mismo JSON para copiar manualmente.
+
+## Paralelismo
+
+Configura directorios distintos por worker al usar Pabot. No compartas un
+`output_dir` físico entre procesos que escriban al mismo tiempo.
