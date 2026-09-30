@@ -36,7 +36,9 @@ no crea archivos ni requiere un test activo, para poder generar la referencia.
 - `pages.yml`: MkDocs, Libdoc y reporte generado; publica las tres rutas juntas.
 - `release.yml`: construir distribución y publicar en PyPI desde una release.
 
-Pages usa un sitio por repositorio. Durante la primera etapa se despliega desde `dev`.
+Pages usa un sitio por repositorio. Se despliega desde `main` después de fusionar un PR con CI exitoso.
+Los cambios se desarrollan en ramas `feat/`, `fix/` o `docs/`; `main` requiere
+pull request y el check `verify`, sin aprobación externa obligatoria.
 
 ## Trusted Publishing
 

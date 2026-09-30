@@ -1,7 +1,7 @@
 name: Docs, Libdoc and live report
 on:
   push:
-    branches: [dev]
+    branches: [main]
   workflow_dispatch:
 permissions:
   contents: read

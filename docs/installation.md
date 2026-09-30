@@ -33,7 +33,7 @@ Ruff ni las dependencias de desarrollo para ejecutar los tests.
 ```bash
 git clone https://github.com/angel-valdezzz/robotframework-api-case-reporter.git
 cd robotframework-api-case-reporter
-git checkout dev
+git checkout main
 poetry install
 poetry build
 ```
