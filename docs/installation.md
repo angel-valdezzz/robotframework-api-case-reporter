@@ -2,9 +2,17 @@
 
 Requisitos: Python 3.12 o superior y Robot Framework 7.5 o superior.
 
+## Desde PyPI
+
+```bash
+python -m pip install robotframework-api-case-reporter==0.1.0 robotframework-requests
+# En Poetry:
+poetry add robotframework-api-case-reporter==0.1.0 robotframework-requests
+```
+
 ## Desde WHL
 
-Descarga el archivo de una release o del artefacto `distribution` de GitHub Actions:
+Descarga el archivo de PyPI o del artefacto `distribution` de GitHub Actions:
 
 ```bash
 python -m pip install robotframework_api_case_reporter-0.1.0-py3-none-any.whl
@@ -30,5 +38,5 @@ poetry install
 poetry build
 ```
 
-La publicación en PyPI todavía requiere configurar el Trusted Publisher en la cuenta
-del propietario. No se necesita publicar en PyPI para instalar el WHL.
+La versión 0.1.0 está publicada en PyPI mediante Trusted Publishing.
+No se necesita acceder a PyPI para instalar un WHL previamente descargado.

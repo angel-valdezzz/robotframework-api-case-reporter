@@ -38,9 +38,10 @@ no crea archivos ni requiere un test activo, para poder generar la referencia.
 
 Pages usa un sitio por repositorio. Durante la primera etapa se despliega desde `dev`.
 
-## Trusted Publishing pendiente
+## Trusted Publishing
 
-Configurar en la cuenta PyPI del propietario un **pending publisher**:
+La versión 0.1.0 se publicó mediante Trusted Publishing desde `release.yml`.
+Para configurar un publisher equivalente:
 
 | Campo | Valor |
 |---|---|
@@ -54,5 +55,12 @@ El workflow ya utiliza OIDC y `pypa/gh-action-pypi-publish`, sin tokens guardado
 Configurar el pending publisher no reserva el nombre. La publicación se ejecuta al
 publicar una release estable cuyo tag, por ejemplo `v0.1.0`, coincida con pyproject.toml.
 
-Hasta completar esta configuración, usar el WHL del artefacto de CI. No se ha
-publicado el paquete en PyPI ni se requiere compartir una contraseña/token en chat.
+El publisher inicial se registró sin restricción de environment (`Any`). El workflow
+usa el entorno `pypi`; se puede limitar el publisher a ese entorno.
+No se requiere compartir una contraseña ni guardar un API token.
+
+## Ejemplo instalado desde PyPI
+
+El repositorio [robot-api-case-report](https://github.com/angel-valdezzz/robot-api-case-report/tree/dev)
+instala la versión publicada, ejecuta una API local ficticia y verifica un caso
+individual y dos casos DataDriver. Cada caso genera su propio HTML.

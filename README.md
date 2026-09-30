@@ -9,11 +9,13 @@ Version 0.1.0 targets Python 3.12+ and Robot Framework 7.5+. No pytest adapter.
 ## Install
 
 ```bash
-pip install robotframework_api_case_reporter-0.1.0-py3-none-any.whl
+pip install robotframework-api-case-reporter==0.1.0
+pip install robotframework-requests
 ```
 
-The package is not yet published on PyPI. Download the WHL from CI artifacts or a
-GitHub release once available. RequestsLibrary is installed separately.
+Published on PyPI: https://pypi.org/project/robotframework-api-case-reporter/0.1.0/
+You can also install the WHL downloaded from PyPI or CI artifacts. RequestsLibrary
+is installed separately.
 
 ```robotframework
 *** Settings ***
@@ -63,6 +65,6 @@ Libdoc: the same site under `/keywords/`. Live example under `/examples/report.h
   fabricated request. Keys missing before Check executes appear as Robot errors.
 - Pabot processes are supported with distinct output directories per worker. Sharing
   one physical report directory across concurrent writers is not supported in 0.1.
-- Integration of the separate example repository and PyPI registration are deferred.
+- Runnable example: https://github.com/angel-valdezzz/robot-api-case-report/tree/dev
 
 See the documentation for release workflow and Trusted Publisher configuration.
