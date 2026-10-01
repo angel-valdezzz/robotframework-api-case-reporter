@@ -21,7 +21,7 @@ def write_report(case: Case, directory: Path, redactor: Redactor) -> Path:
         counter += 1
     environment = Environment(autoescape=select_autoescape(["html"]))
     template = environment.from_string(
-        files("APICaseReporter").joinpath("templates/report.html").read_text(encoding="utf-8")
+        files("request_reporter").joinpath("templates/report.html").read_text(encoding="utf-8")
     )
     # Final cleaning also removes secrets learned in subsequent requests.
     payload = redactor.clean(asdict(case))

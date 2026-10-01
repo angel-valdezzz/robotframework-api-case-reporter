@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0
+
+- Rename distribution to robotframework-request-reporter and public import to RequestReporter. Python implementation lives in request_reporter.
+- Capture Response and Assert replace the old keyword names, retaining compatibility aliases.
+- Test case terminology, structured request URL with copy button, and query parameters preserving duplicate/empty values.
+- Live example includes optional metadata; keep the existing 1100 px report width.
+
+
 ## 0.2.0
 
 - Summary, Requests and Failures sections with automatic Robot test names.

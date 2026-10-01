@@ -15,7 +15,7 @@ def main() -> None:
     keywords = ROOT / "docs" / "keywords" / "index.html"
     keywords.parent.mkdir(exist_ok=True)
     subprocess.run(
-        [sys.executable, "-m", "robot.libdoc", "APICaseReporter", str(keywords)],
+        [sys.executable, "-m", "robot.libdoc", "RequestReporter", str(keywords)],
         cwd=ROOT,
         check=True,
     )

@@ -1,12 +1,12 @@
 # Primer caso y varios requests
 
 Guarda este ejemplo como `tests/distributor.robot`. Sustituye la URL ficticia por
-la de tu servicio, o utiliza el [ejemplo ejecutable con API local](https://github.com/angel-valdezzz/robot-api-case-report/tree/dev).
+la de tu servicio, o utiliza el [ejemplo ejecutable con API local](https://github.com/angel-valdezzz/robotframework-api-testing/tree/main).
 
 ```robotframework
 *** Settings ***
 Library    RequestsLibrary
-Library    APICaseReporter
+Library    RequestReporter
 
 *** Variables ***
 ${BASE_URL}    https://api.qa.example.test
@@ -15,8 +15,8 @@ ${BASE_URL}    https://api.qa.example.test
 Consultar distribuidor
     Set Case Metadata    case_id=DIST-001    environment=QA
     ${response}=    GET    ${BASE_URL}/distribuidores/1042    expected_status=anything
-    ${id}=    Capture HTTP Exchange    Consultar distribuidor    ${response}    # (1)!
-    Check    ${id}    Código HTTP
+    ${id}=    Capture Response    Consultar distribuidor    ${response}    # (1)!
+    Assert    ${id}    Código HTTP
     ...    Should Be Equal As Integers    ${response.status_code}    200
     VAR    ${body}    ${response.json()}    # (2)!
     Verificar datos del distribuidor    ${id}    ${body}
@@ -25,9 +25,9 @@ Consultar distribuidor
 Verificar datos del distribuidor
     [Arguments]    ${id}    ${body}
     [Tags]    robot:continue-on-failure
-    Check    ${id}    Tipo de distribuidor
+    Assert    ${id}    Tipo de distribuidor
     ...    Should Be Equal As Strings    ${body}[tipoDistribuidor]    AGENTE
-    Check    ${id}    RFC con contenido
+    Assert    ${id}    RFC con contenido
     ...    Should Not Be Empty    ${body}[rfc]
 ```
 
@@ -47,7 +47,7 @@ El título corresponde al nombre del test. Los nombres repetidos reciben sufijos
 ## Asociar varias requests
 
 Si primero obtienes un token y luego consultas un distribuidor, captura cada
-response y conserva ambos IDs. Usa el ID correspondiente en cada `Check`.
+response y conserva ambos IDs. Usa el ID correspondiente en cada `Assert`.
 No se asume un “último request” para asociar las assertions.
 
 ```robotframework
@@ -56,11 +56,11 @@ Obtener token
     VAR    &{form}    grant_type=client_credentials    client_secret=${CLIENT_SECRET}
     ${response}=    POST    ${BASE_URL}/oauth/token
     ...    data=${form}    expected_status=anything
-    ${id}=    Capture HTTP Exchange    Obtener token    ${response}
-    Check    ${id}    Código HTTP
+    ${id}=    Capture Response    Obtener token    ${response}
+    Assert    ${id}    Código HTTP
     ...    Should Be Equal As Integers    ${response.status_code}    200
     VAR    ${body}    ${response.json()}
-    Check    ${id}    Token presente    Should Not Be Empty    ${body}[access_token]
+    Assert    ${id}    Token presente    Should Not Be Empty    ${body}[access_token]
     RETURN    ${body}[access_token]
 ```
 
@@ -68,14 +68,14 @@ Este fragmento requiere `${BASE_URL}`, `${CLIENT_SECRET}` y las imports del prim
 bloque. Consulta la [configuración de datos sensibles](configuration.md).
 
 !!! note "Continuación ante fallos"
-    `Check` registra el resultado y propaga el fallo normal de Robot. La etiqueta
+    `Assert` registra el resultado y propaga el fallo normal de Robot. La etiqueta
     `robot:continue-on-failure` permite ejecutar comprobaciones independientes
     en una keyword de negocio. Evita aplicarla a pasos dependientes, como obtener
     un token requerido para la siguiente petición.
 
 ## Keywords propias
 
-`Check` puede ejecutar assertions BuiltIn o keywords tuyas. Para las igualdades
+`Assert` puede ejecutar assertions BuiltIn o keywords tuyas. Para las igualdades
 habituales muestra Expected/Actual; para una keyword personalizada muestra sus
 argumentos y error. Las comprobaciones no ejecutadas no se cuentan como SKIP.
 

@@ -4,7 +4,7 @@
 
 **Del test de Robot al archivo que adjuntas en Jira.**
 
-API Case Reporter genera un HTML independiente con las requests, responses y
+Robot Framework Request Reporter genera un HTML independiente con las requests, responses y
 assertions de cada caso. El nombre y el estado vienen directamente de Robot.
 El reporte se abre sin conexión y no necesita un servidor.
 
@@ -27,8 +27,8 @@ El reporte se abre sin conexión y no necesita un servidor.
 
 ```mermaid
 flowchart TD
-    A[RequestsLibrary: ejecutar petición] --> B[Capture HTTP Exchange: guardar response]
-    B --> C[Check: registrar assertions]
+    A[RequestsLibrary: ejecutar petición] --> B[Capture Response: guardar response]
+    B --> C[Assert: registrar assertions]
     C --> D[Listener: finalizar caso]
     D --> E[HTML independiente para Jira]
 ```
@@ -46,7 +46,7 @@ registra su listener: no necesitas un argumento CLI ni una keyword de generació
 - **Datos tabulares:** [generar casos con DataDriver](datadriver.md).
 - **Revisar resultados:** [leer Summary, Failures y Assertions](report.md).
 - **Consultar argumentos:** [referencia Libdoc](keywords/index.html).
-- **Probar el proyecto completo:** [ejemplo ejecutable](https://github.com/angel-valdezzz/robot-api-case-report/tree/dev), con Poetry y una API local ficticia.
+- **Probar el proyecto completo:** [ejemplo ejecutable](https://github.com/angel-valdezzz/robotframework-api-testing/tree/main), con Poetry y una API local ficticia.
 
 También puedes abrir un [reporte SKIP](examples/skipped.html). Cada ejemplo es un
 archivo de un solo caso. No existe un dashboard que reúna toda la suite.

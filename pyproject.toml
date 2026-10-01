@@ -1,6 +1,6 @@
 [project]
-name = "robotframework-api-case-reporter"
-version = "0.2.0"
+name = "robotframework-request-reporter"
+version = "0.3.0"
 description = "Standalone HTML API evidence reports for each Robot Framework test case."
 authors = [{name = "Angel Molina"}]
 readme = "README.md"
@@ -10,12 +10,12 @@ keywords = ["robotframework", "api", "report", "requests"]
 classifiers = ["Framework :: Robot Framework :: Library", "Programming Language :: Python :: 3", "Development Status :: 3 - Alpha"]
 
 [project.urls]
-Repository = "https://github.com/angel-valdezzz/robotframework-api-case-reporter"
-Documentation = "https://angel-valdezzz.github.io/robotframework-api-case-reporter/"
+Repository = "https://github.com/angel-valdezzz/robotframework-request-reporter"
+Documentation = "https://angel-valdezzz.github.io/robotframework-request-reporter/"
 
 [tool.poetry]
-packages = [{include = "APICaseReporter", from = "src"}]
-include = [{path = "src/APICaseReporter/templates/*.html", format = ["sdist", "wheel"]}]
+packages = [{include = "request_reporter", from = "src"}, {include = "RequestReporter.py", from = "src"}, {include = "APICaseReporter", from = "src"}]
+include = [{path = "src/request_reporter/templates/*.html", format = ["sdist", "wheel"]}]
 
 [tool.poetry.group.dev.dependencies]
 robotframework-requests = "0.9.7"
@@ -24,6 +24,7 @@ ruff = ">=0.12,<1"
 mypy = ">=1.15,<2"
 types-requests = "*"
 twine = ">=6,<7"
+robotframework-robocop = "^9.1.0"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs-material = ">=9.6,<10"
@@ -46,3 +47,11 @@ ignore_missing_imports = true
 [build-system]
 requires = ["poetry-core>=2.0,<3"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.robocop]
+target-version = 7
+
+[tool.robocop.lint]
+threshold = "E"
+
+[tool.robocop.format]
