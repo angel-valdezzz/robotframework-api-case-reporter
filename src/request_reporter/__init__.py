@@ -36,7 +36,7 @@ from .models import Case, Exchange, ExecutionError, Validation
 from .redaction import Redactor
 from .render import write_report
 
-__version__ = "0.3.1"
+__version__ = "0.4.0"
 _HEADERS = "Authorization,Proxy-Authorization,Cookie,Set-Cookie,X-API-Key"
 _FIELDS = "access_token,refresh_token,client_secret,password,token,api_key"
 
@@ -93,11 +93,12 @@ class RequestReporter:
             source=str(data.source or ""),
             test_id=result.id,
             started=datetime.now(UTC).isoformat(),
+            suite=str(BuiltIn().get_variable_value("${SUITE NAME}", "")),
         )
         self.started_at = perf_counter()
 
     def end_keyword(self, data: Any, result: Any) -> None:
-        """Record leaf failures outside Check without parsing Robot's message."""
+        """Record leaf failures outside Assert without parsing Robot's message."""
         if self.case is None or self._checking or result.status != "FAIL":
             return
         if any(getattr(item, "status", "") == "FAIL" for item in result.body):
@@ -266,13 +267,3 @@ class RequestReporter:
             raise
         finally:
             self._checking -= 1
-
-    @keyword("Capture HTTP Exchange", tags=["deprecated"])
-    def capture_http_exchange(self, name: str, response: Response) -> str:
-        """Compatibility alias for [Capture Response]."""
-        return self.capture_response(name, response)
-
-    @keyword("Check", tags=["deprecated"])
-    def check(self, request_id: str, label: str, assertion_keyword: str, *args: Any) -> Any:
-        """Compatibility alias for [Assert]."""
-        return self.assert_that(request_id, label, assertion_keyword, *args)

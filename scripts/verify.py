@@ -22,6 +22,10 @@ def main() -> None:
         cwd=ROOT,
         check=False,
     )
+    from robot.libdocpkg import LibraryDocumentation
+
+    keywords = {kw.name for kw in LibraryDocumentation("RequestReporter").keywords}
+    assert keywords == {"Assert", "Capture Response", "Set Case Metadata"}, keywords
     result = ExecutionResult(str(output / "output.xml"))
     tests = [test for suite in result.suite.suites for test in suite.tests]
     assert len(tests) == 17, f"Expected 17 cases, got {len(tests)}"
@@ -44,6 +48,8 @@ def main() -> None:
         assert match, f"Missing report payload: {path}"
         data = json.loads(match[1])
         assert data["status"] != "RUNNING"
+        assert data["suite"]
+        assert "Requests overview" in html
         assert "fixture-token-SECRET" not in html
         assert "fixture-secret-SECRET" not in html
         assert "query-secret-SECRET" not in html

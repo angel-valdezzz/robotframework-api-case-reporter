@@ -23,6 +23,9 @@ def main() -> None:
     examples.mkdir(exist_ok=True)
     shutil.copyfile(demo, examples / "report.html")
     shutil.copyfile(ROOT / "results/acceptance/cases/Skipped_case.html", examples / "skipped.html")
+    shutil.copyfile(
+        ROOT / "results/acceptance/cases/Passing_distributor.html", examples / "passing.html"
+    )
     subprocess.run([sys.executable, "-m", "mkdocs", "build", "--strict"], cwd=ROOT, check=True)
     print("Built MkDocs, keywords/index.html and examples/report.html.")
 

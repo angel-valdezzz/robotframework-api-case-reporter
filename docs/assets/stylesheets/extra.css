@@ -4,3 +4,5 @@
 .md-typeset .hero{padding:1.3rem;border:1px solid var(--md-default-fg-color--lightest);border-radius:.6rem;background:var(--md-code-bg-color)}
 .md-typeset .hero p:last-child{margin-bottom:0}
 .md-typeset .md-button{border-radius:.35rem;margin:.25rem .3rem .25rem 0}
+
+.new-tab-hint { font-size: .8em; opacity: .8; white-space: nowrap; }

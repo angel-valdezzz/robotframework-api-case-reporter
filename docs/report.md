@@ -62,3 +62,27 @@ modos de color mantienen labels de estado y controles con nombres accesibles.
 ## Request y Params
 
 El método y la URL están juntos; el icono junto a la URL copia la dirección ya protegida. HTTP status y duración de la respuesta se muestran debajo. **Params** presenta los query parameters de la URL enviada, incluidas claves repetidas y valores vacíos. La copia usa un array JSON para conservar las repeticiones. Los secretos se ocultan antes de mostrar o copiar los datos.
+
+## Summary y navegación
+
+La tabla **Requests overview** muestra nombre, método, código HTTP, tiempo de respuesta y assertions aprobadas/fallidas. Selecciona el nombre para abrir la request en **Requests**. HTTP status no determina el resultado del test.
+
+**Test case information** muestra fecha UTC, duración y resultado. **Test origin** permite consultar la suite y archivo de origen; el reporte continúa conteniendo un solo test. Los metadatos aparecen únicamente cuando existen.
+
+El resultado explica cuántas assertions fallaron y en cuántas requests. Los errores de ejecución y el motivo de SKIP se muestran aparte. Un test sin assertions no se presenta como una validación completa.
+
+## Explorar los bodies
+
+- **Formatted** permite plegar objetos y arrays JSON con el teclado o el mouse.
+- **Raw** muestra el texto completo del contenido capturado. Para JSON, es la representación formateada y protegida, no los bytes originales.
+- **Search body** busca claves y valores sin modificar los datos; abre los objetos con coincidencias.
+- El icono de copia copia el body completo, aunque esté plegado o haya una búsqueda activa. Si el portapapeles no está disponible, aparece un campo para copiar manualmente.
+- Body vacío, respuesta no capturada y contenido binario se distinguen explícitamente.
+
+## Filtrar assertions
+
+Usa **All**, **Failed** o **Passed**. Los filtros no cambian los contadores del Summary. Los enlaces desde Failures abren la assertion correspondiente aunque hubiese otro filtro activo.
+
+No se incluye impresión/PDF, gráficas, Results ni logs. Los folios permanecen en el response body y pueden validarse con Assert.
+
+[Ejemplo aprobado sin metadatos](examples/passing.html){ .md-button } · [Ejemplo SKIP](examples/skipped.html){ .md-button }

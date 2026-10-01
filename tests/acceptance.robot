@@ -1,7 +1,7 @@
 *** Settings ***
 Library           RequestsLibrary
 Library           String
-Library           RequestReporter    WITH NAME    Report
+Library           RequestReporter
 Library           support/LocalAPI.py
 
 Suite Setup       Start Fixture
@@ -16,46 +16,46 @@ Passing distributor
 
 Failing distributor
     [Tags]    expected-failure
-    Report.Set Case Metadata    case_id=DIST-002    environment=QA    distribuidor_id=1087
+    Set Case Metadata    case_id=DIST-002    environment=QA    distribuidor_id=1087
     ${token}=    Get token
     ${body}    ${id}=    Get distributor    1087    ${token}
     Verify distributor data    ${id}    ${body}
 
 Non JSON error response
     ${response}=    GET    ${BASE_URL}/broken    expected_status=anything
-    ${id}=    Report.Capture Response    Upstream error    ${response}
-    Report.Assert    ${id}    Expected HTTP error    Should Be Equal As Integers    ${response.status_code}    502
+    ${id}=    Capture Response    Upstream error    ${response}
+    Assert    ${id}    Expected HTTP error    Should Be Equal As Integers    ${response.status_code}    502
 
 Invalid JSON stops parsing
     [Tags]    expected-failure
     ${response}=    GET    ${BASE_URL}/non-json    expected_status=anything
-    Report.Capture Response    Invalid JSON    ${response}
+    Capture Response    Invalid JSON    ${response}
     ${body}=    Set Variable    ${response.json()}
     Fail    Should not reach this step
 
 Binary response
     ${response}=    GET    ${BASE_URL}/binary    expected_status=anything
-    ${id}=    Report.Capture Response    Binary    ${response}
-    Report.Assert    ${id}    HTTP    Should Be Equal As Integers    ${response.status_code}    200
+    ${id}=    Capture Response    Binary    ${response}
+    Assert    ${id}    HTTP    Should Be Equal As Integers    ${response.status_code}    200
 
 Empty fields
     [Tags]    expected-failure
     ${response}=    GET    ${BASE_URL}/distribuidores/1042    expected_status=anything
-    ${id}=    Report.Capture Response    Empty values    ${response}
+    ${id}=    Capture Response    Empty values    ${response}
     Verify empty values    ${id}
 
 Untrusted body content
     ${response}=    GET    ${BASE_URL}/hostile    expected_status=anything
-    ${id}=    Report.Capture Response    Untrusted text    ${response}
-    Report.Assert    ${id}    HTTP    Should Be Equal As Integers    ${response.status_code}    200
+    ${id}=    Capture Response    Untrusted text    ${response}
+    Assert    ${id}    HTTP    Should Be Equal As Integers    ${response.status_code}    200
 
 No requests
-    Report.Set Case Metadata    case_id=EMPTY
+    Set Case Metadata    case_id=EMPTY
     No Operation
 
 Unknown request ID
     [Tags]    expected-failure
-    Report.Assert    unknown    Invalid ID    Should Be Equal    a    a
+    Assert    unknown    Invalid ID    Should Be Equal    a    a
 
 Skipped case
     Skip    Demonstrate a skipped report
@@ -103,10 +103,10 @@ Start Fixture
 Get token
     ${form}=    Create Dictionary    client_secret=fixture-secret-SECRET
     ${response}=    POST    ${BASE_URL}/oauth/token    data=${form}    expected_status=anything
-    ${id}=    Report.Capture Response    Obtener token    ${response}
-    Report.Assert    ${id}    HTTP    Should Be Equal As Integers    ${response.status_code}    200
+    ${id}=    Capture Response    Obtener token    ${response}
+    Assert    ${id}    HTTP    Should Be Equal As Integers    ${response.status_code}    200
     ${body}=    Set Variable    ${response.json()}
-    Report.Assert    ${id}    Token presente    Should Not Be Empty    ${body}[access_token]
+    Assert    ${id}    Token presente    Should Not Be Empty    ${body}[access_token]
     RETURN    ${body}[access_token]
 
 Get distributor
@@ -114,20 +114,21 @@ Get distributor
     ${headers}=    Create Dictionary    Authorization=Bearer ${token}
     ${response}=    GET    url=${BASE_URL}/distribuidores/${number}?api_key=query-secret-SECRET&tag=one&tag=two&empty=
     ...    headers=${headers}    expected_status=anything
-    ${id}=    Report.Capture Response    Consultar distribuidor    ${response}
-    Report.Assert    ${id}    HTTP    Should Be Equal As Integers    ${response.status_code}    200
+    ${id}=    Capture Response    Consultar distribuidor    ${response}
+    Assert    ${id}    HTTP    Should Be Equal As Integers    ${response.status_code}    200
     ${body}=    Set Variable    ${response.json()}
     RETURN    ${body}    ${id}
 
 Verify distributor data
     [Tags]    robot:continue-on-failure
     [Arguments]    ${id}    ${body}
-    Report.Assert    ${id}    Verificar tipo distribuidor
+    Assert    ${id}    Verificar tipo distribuidor
     ...    Should Be Equal As Strings    ${body}[tipoDistribuidor]    AGENTE
-    Report.Assert    ${id}    Verificar tipo persona
+    Assert    ${id}    Verificar tipo persona
     ...    Should Be Equal As Strings    ${body}[tipoPersona]    FISICA
-    Report.Assert    ${id}    Verificar RFC no vacío    Campo Debe Tener Contenido    ${body.get('rfc')}
-    Report.Assert    ${id}    Verificar CURP no vacía    Campo Debe Tener Contenido    ${body.get('curp')}
+    Assert    ${id}    Verificar RFC no vacío    Campo Debe Tener Contenido    ${body.get('rfc')}
+    Assert    ${id}    Verificar CURP no vacía    Campo Debe Tener Contenido    ${body.get('curp')}
+    Assert    ${id}    Verificar folio generado    Should Not Be Empty    ${body}[registration][folio]
 
 Campo Debe Tener Contenido
     [Arguments]    ${value}
@@ -139,14 +140,14 @@ Campo Debe Tener Contenido
 Verify empty values
     [Tags]    robot:continue-on-failure
     [Arguments]    ${id}
-    Report.Assert    ${id}    Null    Campo Debe Tener Contenido    ${NONE}
-    Report.Assert    ${id}    Empty    Campo Debe Tener Contenido    ${EMPTY}
-    Report.Assert    ${id}    Whitespace    Campo Debe Tener Contenido    ${SPACE}${SPACE}
+    Assert    ${id}    Null    Campo Debe Tener Contenido    ${NONE}
+    Assert    ${id}    Empty    Campo Debe Tener Contenido    ${EMPTY}
+    Assert    ${id}    Whitespace    Campo Debe Tener Contenido    ${SPACE}${SPACE}
 
 Verify Reports
     Stop API
-    Inspect Case    Passing distributor    2    7    0    PASS
-    Inspect Case    Failing distributor    2    5    2    FAIL
+    Inspect Case    Passing distributor    2    8    0    PASS
+    Inspect Case    Failing distributor    2    6    2    FAIL
     Inspect Case    Non JSON error response    1    1    0    PASS
     Inspect Case    Invalid JSON stops parsing    1    0    0    FAIL
     Inspect Case    Binary response    1    1    0    PASS

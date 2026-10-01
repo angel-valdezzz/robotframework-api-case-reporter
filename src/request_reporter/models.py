@@ -42,6 +42,7 @@ class Case:
     source: str
     test_id: str
     started: str
+    suite: str = ""
     status: str = "RUNNING"
     duration_ms: float = 0
     message: str = ""

@@ -4,12 +4,12 @@ One standalone HTML evidence report per Robot Framework test case. Supports
 RequestsLibrary responses, multiple HTTP requests, business assertions, metadata,
 JSON formatting, request/response headers, Table/JSON and Copy.
 
-Version 0.3.1 targets Python 3.12+ and Robot Framework 7.5+. No pytest adapter.
+Version 0.4.0 targets Python 3.12+ and Robot Framework 7.5+. No pytest adapter.
 
 ## Install
 
 ```bash
-pip install robotframework-request-reporter==0.3.1
+pip install robotframework-request-reporter==0.4.0
 pip install robotframework-requests
 ```
 
@@ -80,6 +80,8 @@ HTTP status colors describe the response class independently of PASS/FAIL assert
 
 Changes are integrated into main through pull requests with required CI checks.
 
-## Migration from APICaseReporter
+## Version 0.4
 
-Install `robotframework-request-reporter` and import `RequestReporter`. Do not install both distributions: the new wheel includes the legacy import. `Capture HTTP Exchange` and `Check` remain compatibility aliases; new suites use `Capture Response` and `Assert`. These keywords record an existing response and execute an assertion respectively; capturing does not send another request.
+Use `Capture Response` to record an existing response and `Assert` to execute and record an assertion. The compatibility keywords from earlier releases have been removed. Update suites before upgrading.
+
+Summary includes a request overview with direct navigation. Bodies support search, collapsible JSON, Raw view and full-content copying. Assertions can be filtered by result. Each HTML remains offline and contains one test.

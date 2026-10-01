@@ -1,6 +1,6 @@
 *** Settings ***
 Library           RequestsLibrary
-Library           APICaseReporter    WITH NAME    Report
+Library           RequestReporter
 Library           support/LocalAPI.py
 Library           DataDriver    file=${CURDIR}/data.csv    encoding=utf-8
 
@@ -21,10 +21,10 @@ Prepare fixture
 
 Query from row
     [Arguments]    ${number}
-    Report.Set Case Metadata    distributor=${number}
+    Set Case Metadata    distributor=${number}
     ${response}=    GET    ${BASE_URL}/distribuidores/${number}    expected_status=anything
-    ${id}=    Report.Capture HTTP Exchange    Distributor query    ${response}
-    Report.Check    ${id}    HTTP    Should Be Equal As Integers    ${response.status_code}    200
+    ${id}=    Capture Response    Distributor query    ${response}
+    Assert    ${id}    HTTP    Should Be Equal As Integers    ${response.status_code}    200
 
 Verify generated reports
     Stop API
