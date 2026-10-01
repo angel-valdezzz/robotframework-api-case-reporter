@@ -52,6 +52,9 @@ que ocurren fuera de la ejecución de keywords, por ejemplo al resolver una cond
 !!! note "Lo que no se cuenta"
     Un timeout sin response no fabrica una request. Las assertions que no llegaron
     a ejecutarse no se cuentan como SKIP. SKIP del encabezado corresponde al caso.
+    Un caso omitido genera su HTML con nombre, estado y motivo. Conserva la evidencia
+    capturada antes de la omisión; si no hubo requests, no incluye evidencia HTTP.
+    SKIP significa que el caso fue omitido. Un caso que falla tiene estado FAIL.
 
 ## Controles accesibles
 
@@ -85,4 +88,4 @@ Usa **All**, **Failed** o **Passed**. Los filtros no cambian los contadores del 
 
 No se incluye impresión/PDF, gráficas, Results ni logs. Los folios permanecen en el response body y pueden validarse con Assert.
 
-[Ejemplo aprobado sin metadatos](examples/passing.html){ .md-button } · [Ejemplo SKIP](examples/skipped.html){ .md-button }
+[Ejemplo aprobado sin metadatos](examples/passing.html){ .md-button }

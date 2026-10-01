@@ -48,5 +48,5 @@ registra su listener: no necesitas un argumento CLI ni una keyword de generació
 - **Consultar argumentos:** [referencia Libdoc](keywords/index.html).
 - **Probar el proyecto completo:** [ejemplo ejecutable](https://github.com/angel-valdezzz/robotframework-api-testing/tree/main), con Poetry y una API local ficticia.
 
-También puedes abrir un [reporte SKIP](examples/skipped.html). Cada ejemplo es un
+También puedes abrir un [reporte aprobado sin metadatos](examples/passing.html). Cada ejemplo es un
 archivo de un solo caso. No existe un dashboard que reúna toda la suite.
