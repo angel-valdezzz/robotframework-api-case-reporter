@@ -85,3 +85,5 @@ Changes are integrated into main through pull requests with required CI checks.
 Use `Capture Response` to record an existing response and `Assert` to execute and record an assertion. The compatibility keywords from earlier releases have been removed. Update suites before upgrading.
 
 Summary includes a request overview with direct navigation. Bodies support search, collapsible JSON, Raw view and full-content copying. Assertions can be filtered by result. Each HTML remains offline and contains one test.
+
+`Capture Request Error` registra intentos HTTP sin response de forma explícita; consulta el [manual de usuario](https://angel-valdezzz.github.io/robotframework-request-reporter/usage/). No ejecuta HTTP ni oculta fallos. Bodies completos; texto/XML plegables.

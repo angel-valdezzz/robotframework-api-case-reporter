@@ -25,10 +25,15 @@ def main() -> None:
     from robot.libdocpkg import LibraryDocumentation
 
     keywords = {kw.name for kw in LibraryDocumentation("RequestReporter").keywords}
-    assert keywords == {"Assert", "Capture Response", "Set Case Metadata"}, keywords
+    assert keywords == {
+        "Assert",
+        "Capture Response",
+        "Set Case Metadata",
+        "Capture Request Error",
+    }, keywords
     result = ExecutionResult(str(output / "output.xml"))
     tests = [test for suite in result.suite.suites for test in suite.tests]
-    assert len(tests) == 17, f"Expected 17 cases, got {len(tests)}"
+    assert len(tests) == 19, f"Expected 19 cases, got {len(tests)}"
     for test in tests:
         if "expected-failure" in test.tags:
             assert test.status == "FAIL", f"Expected intentional failure: {test.name}"
@@ -37,11 +42,11 @@ def main() -> None:
         else:
             assert test.status == "PASS", f"{test.name}: {test.message}"
     assert all(s.teardown.status == "PASS" for s in result.suite.suites)
-    assert process.returncode == 6, f"Unexpected Robot exit code: {process.returncode}"
+    assert process.returncode == 7, f"Unexpected Robot exit code: {process.returncode}"
     reports = list((output / "cases").glob("*.html"))
-    assert len(reports) == 17, "One report per test, including duplicate names and SKIP"
+    assert len(reports) == 19, "One report per test, including duplicate names and SKIP"
     for path in reports:
-        html = path.read_text()
+        html = path.read_text(encoding="utf-8")
         match = re.search(
             r'<script type="application/json" id="case-data">(.*?)</script>', html, re.DOTALL
         )
@@ -66,6 +71,18 @@ def main() -> None:
         if data["name"] == "Timeout without response":
             assert len(errors) == 1 and not data["exchanges"]
             assert "Timeout" in errors[0]["message"] or "timed out" in errors[0]["message"]
+        if data["name"] == "CON":
+            assert path.name == "test_CON.html"
+        if data["name"] == "Captured timeout without response":
+            assert not data["exchanges"]
+            assert len(data["request_errors"]) == 1
+            attempt = data["request_errors"][0]
+            assert attempt["method"] == "GET" and ("api_key", "[REDACTED]") in parse_qsl(
+                urlsplit(attempt["url"]).query
+            )
+            assert "status_code" not in attempt and "response_body" not in attempt
+        if data["name"] == "Empty fields":
+            assert all(v["expected"] is None for v in data["exchanges"][0]["validations"])
         if data["name"] == "Handled error then unhandled error":
             assert len(errors) == 1
             assert errors[0]["message"] == "Unhandled failure must appear"
@@ -73,7 +90,7 @@ def main() -> None:
     demo = ROOT / "build" / "report.html"
     demo.parent.mkdir(exist_ok=True)
     shutil.copyfile(failing, demo)
-    print("Verified 17 Robot cases, assertion/execution errors, DataDriver and redaction.")
+    print("Verified 19 Robot cases, assertion/execution errors, DataDriver and redaction.")
 
 
 if __name__ == "__main__":

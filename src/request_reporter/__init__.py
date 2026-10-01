@@ -32,11 +32,11 @@ from robot.api import logger
 from robot.api.deco import keyword, library
 from robot.libraries.BuiltIn import BuiltIn
 
-from .models import Case, Exchange, ExecutionError, Validation
+from .models import Case, Exchange, ExecutionError, RequestError, Validation
 from .redaction import Redactor
 from .render import write_report
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"
 _HEADERS = "Authorization,Proxy-Authorization,Cookie,Set-Cookie,X-API-Key"
 _FIELDS = "access_token,refresh_token,client_secret,password,token,api_key"
 
@@ -59,7 +59,7 @@ class RequestReporter:
         | Argument | Meaning |
         | --- | --- |
         | output_dir | Report directory; default is Robot's OUTPUT DIR/cases. |
-        | language | Interface language. Version 0.3 supports `en` only. |
+        | language | Interface language. This version supports `en` only. |
         | redact_headers | Comma-separated header names; matched case-insensitively. |
         | redact_body_fields | Comma-separated JSON/form/query field names. |
 
@@ -73,7 +73,7 @@ class RequestReporter:
         multipart request bodies are summarized instead of embedded.
         """
         if language != "en":
-            raise ValueError("Only language=en is supported in version 0.3.")
+            raise ValueError("Only language=en is supported in this version.")
         self.ROBOT_LIBRARY_LISTENER = self
         self.output_dir = output_dir
         self.redact_headers = redact_headers
@@ -216,6 +216,38 @@ class RequestReporter:
         )
         return request_id
 
+    @keyword("Capture Request Error")
+    def capture_request_error(self, name: str, method: str, url: str, message: str) -> None:
+        """Record an HTTP attempt without a response; does not execute HTTP or fail a test.
+
+        Use inside TRY/EXCEPT around the HTTP call, then propagate the original failure.
+        Captures only caller-supplied information; never invents status, headers or body.
+        URL and message are protected by the reporter's redaction rules.
+
+        ```robotframework
+        TRY
+            ${response}=    GET    ${URL}    timeout=10    expected_status=anything
+        EXCEPT    AS    ${error}
+            Capture Request Error    Health    GET    ${URL}    ${error}
+            Fail    ${error}
+        END
+        ```
+
+        Returns nothing. Failed attempts appear in Summary and Failures, separately
+        from completed exchanges. Do not use this for HTTP 4xx/5xx responses: capture
+        those normally with Capture Response. The actual test status comes from Robot.
+        """
+        case = self._current()
+        protected_url = self.redactor.url(url)
+        case.request_errors.append(
+            RequestError(
+                name=self.redactor.text(name),
+                method=method.upper(),
+                url=protected_url,
+                message=self.redactor.text(message),
+            )
+        )
+
     @keyword("Assert")
     def assert_that(self, request_id: str, label: str, assertion_keyword: str, *args: Any) -> Any:
         """Run an assertion keyword, record its result, and propagate normal failures.
@@ -235,7 +267,6 @@ class RequestReporter:
 
         Standard equality assertions show Expected/Actual. Non-empty checks show
         `non-empty value`; other custom keywords show arguments and the error message.
-        `Campo Debe Tener Contenido` is also recognized as a non-empty assertion.
         Unexecuted checks are not counted. Unknown request IDs fail before execution.
         """
         case = self._current()
@@ -247,7 +278,7 @@ class RequestReporter:
         expected = None
         if normalized.startswith("shouldbeequal") and len(args) > 1:
             expected = args[1]
-        elif normalized in {"shouldnotbeempty", "campodebetenercontenido"}:
+        elif normalized == "shouldnotbeempty":
             expected = "non-empty value"
         validation = Validation(
             label=label,

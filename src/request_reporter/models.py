@@ -37,6 +37,14 @@ class ExecutionError:
 
 
 @dataclass
+class RequestError:
+    name: str
+    method: str
+    url: str
+    message: str
+
+
+@dataclass
 class Case:
     name: str
     source: str
@@ -49,3 +57,4 @@ class Case:
     metadata: dict[str, Any] = field(default_factory=dict)
     exchanges: list[Exchange] = field(default_factory=list)
     execution_errors: list[ExecutionError] = field(default_factory=list)
+    request_errors: list[RequestError] = field(default_factory=list)

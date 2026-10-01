@@ -64,6 +64,19 @@ Timeout without response
     [Tags]    expected-failure
     GET    ${BASE_URL}/slow    timeout=0.01    expected_status=anything
 
+Captured timeout without response
+    [Tags]    expected-failure
+    TRY
+        GET    url=${BASE_URL}/slow?api_key=query-secret-SECRET    timeout=0.01    expected_status=anything
+    EXCEPT    AS    ${error}
+        Capture Request Error    Consulta lenta    GET
+        ...    url=${BASE_URL}/slow?api_key=query-secret-SECRET    message=${error}
+        Fail    ${error}
+    END
+
+CON
+    No Operation
+
 Handled error
     TRY
         Fail    Handled failure must not appear as an execution error

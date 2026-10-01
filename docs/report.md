@@ -89,3 +89,5 @@ Usa **All**, **Failed** o **Passed**. Los filtros no cambian los contadores del 
 No se incluye impresión/PDF, gráficas, Results ni logs. Los folios permanecen en el response body y pueden validarse con Assert.
 
 [Ejemplo aprobado sin metadatos](examples/passing.html){ .md-button }
+
+Los bodies de texto/XML completos se pueden plegar en Formatted y desplegar de nuevo. Raw y la copia conservan todo el texto. HTTP requests cuenta responses capturadas e intentos fallidos registrados; estos últimos aparecen con su operación en Failures → Failed HTTP attempts.
