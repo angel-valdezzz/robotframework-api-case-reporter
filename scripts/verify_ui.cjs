@@ -21,10 +21,12 @@ async function check(file){
   click('[data-section="failures"]');click('[data-failure-request="1"]');assert.equal(d.querySelectorAll('.validation').length,6);assert.match(d.activeElement.id,/assertion-/);
   click('#theme-toggle');assert.equal(d.documentElement.dataset.theme,'dark');
  }
+ if(file==='Captured_timeout_without_response.html'){assert.equal(d.querySelector('#request-count').textContent,'1');assert.match(d.querySelector('#request-errors').textContent,/No response received/);assert(!d.querySelector('#request-errors').textContent.includes('query-secret-SECRET'));}
+ if(file==='Non_JSON_error_response.html'){click('[data-overview-request="0"]');assert(d.querySelector('.text-body'));click('[data-copy="body"]');await new Promise(r=>setImmediate(r));assert.equal(copied,'upstream unavailable');}
  if(file==='Passing_distributor.html')assert.equal(d.querySelector('[aria-label="Test case metadata"]'),null);
  if(file==='No_requests.html')assert.match(d.querySelector('#outcome').textContent,/no assertions recorded/);
  if(file==='Skipped_case.html')assert.match(d.querySelector('#outcome').textContent,/skipped/);
  if(file==='Binary_response.html'){click('[data-overview-request="0"]');assert.match(d.querySelector('#content').textContent,/Binary content is not embedded/);}
  assert.deepEqual(errors.map(e=>e.message),[]);dom.window.close();
 }
-(async()=>{for(const f of ['Failing_distributor.html','Passing_distributor.html','No_requests.html','Skipped_case.html','Binary_response.html','Untrusted_body_content.html'])await check(f);console.log('DOM interaction checks passed: summary, filters, search, copy, raw/tree, failure navigation, themes, optional metadata and states.');})().catch(e=>{console.error(e);process.exit(1)});
+(async()=>{for(const f of ['Failing_distributor.html','Passing_distributor.html','No_requests.html','Skipped_case.html','Binary_response.html','Untrusted_body_content.html','Captured_timeout_without_response.html','Non_JSON_error_response.html'])await check(f);console.log('DOM interaction checks passed: summary, filters, search, copy, raw/tree, failure navigation, themes, optional metadata and states.');})().catch(e=>{console.error(e);process.exit(1)});

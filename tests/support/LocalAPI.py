@@ -99,7 +99,7 @@ class LocalAPI:
         assert sum(v["status"] == "PASS" for v in validations) == passed
         assert sum(v["status"] == "FAIL" for v in validations) == failed
         assert payload["status"] == status, payload["message"]
-        raw = found[-1].read_text()
+        raw = found[-1].read_text(encoding="utf-8")
         for secret in ["fixture-token-SECRET", "fixture-secret-SECRET", "query-secret-SECRET"]:
             assert secret not in raw, f"Secret leaked: {secret}"
 
@@ -107,7 +107,7 @@ class LocalAPI:
     def payload(path: Path) -> dict[str, Any]:
         match = re.search(
             r'<script type="application/json" id="case-data">(.*?)</script>',
-            path.read_text(),
+            path.read_text(encoding="utf-8"),
             re.DOTALL,
         )
         assert match

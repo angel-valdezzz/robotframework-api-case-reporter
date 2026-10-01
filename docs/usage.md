@@ -81,3 +81,34 @@ argumentos y error. Las comprobaciones no ejecutadas no se cuentan como SKIP.
 
 [Consultar keywords](keywords/index.html){ .md-button }
 [Usar DataDriver](datadriver.md){ .md-button }
+
+## Intentos sin response
+
+El listener genera el HTML incluso si el test falla antes de Capture Response.
+Para asociar explícitamente un timeout o error de conexión con su operación, captura
+el intento dentro de una keyword de servicio. Esta keyword no ejecuta HTTP ni cambia
+el resultado del test: propaga el fallo después de registrar la evidencia.
+
+```robotframework
+*** Settings ***
+Library    RequestsLibrary
+Library    RequestReporter
+
+*** Test Cases ***
+Consultar servicio
+    VAR    ${url}    http://localhost:8000/health
+    TRY
+        ${response}=    GET    ${url}    timeout=10    expected_status=anything
+    EXCEPT    AS    ${error}
+        Capture Request Error    Health    GET    ${url}    ${error}
+        Fail    ${error}
+    END
+    ${id}=    Capture Response    Health    ${response}
+    Assert    ${id}    HTTP status
+    ...    Should Be Equal As Integers    ${response.status_code}    200
+```
+
+Failed HTTP attempts muestra método, URL protegida y mensaje. No fabrica status,
+headers ni bodies. Un HTTP 4xx/5xx sí tiene response: usa Capture Response normalmente.
+Los errores de ejecución de Robot y el mensaje final se conservan por separado.
+Una terminación abrupta del proceso puede impedir que se cierre el reporte.

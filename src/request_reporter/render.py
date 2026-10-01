@@ -14,6 +14,16 @@ from .redaction import Redactor
 def write_report(case: Case, directory: Path, redactor: Redactor) -> Path:
     directory.mkdir(parents=True, exist_ok=True)
     stem = re.sub(r"[^\w.-]+", "_", case.name, flags=re.UNICODE).strip("._")[:130] or "case"
+    reserved = {
+        "CON",
+        "PRN",
+        "AUX",
+        "NUL",
+        *(f"COM{i}" for i in range(1, 10)),
+        *(f"LPT{i}" for i in range(1, 10)),
+    }
+    if stem.split(".", 1)[0].upper() in reserved:
+        stem = "test_" + stem
     target = directory / f"{stem}.html"
     counter = 2
     while target.exists():

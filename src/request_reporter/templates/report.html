@@ -41,7 +41,7 @@ header h1{overflow-wrap:anywhere;max-width:100%}.info-grid{display:grid;grid-tem
 <section id="section-requests" aria-label="Requests" hidden><div class="layout"><nav class="requests" id="requests" aria-label="Test case requests"></nav><section class="detail" aria-label="Selected request"><div id="url" class="url"></div><div class="tabs" role="tablist" aria-label="Request details">
 {% for name in ['Response','Request','Params','Headers','Assertions'] %}<button type="button" role="tab" id="tab-{{ name|lower }}" data-tab="{{ name|lower }}" tabindex="{{ '0' if loop.first else '-1' }}" aria-selected="{{ 'true' if loop.first else 'false' }}" aria-controls="content">{{ name }}</button>{% endfor %}
 </div><div id="content" role="tabpanel" aria-labelledby="tab-response" tabindex="0"></div></section></div></section>
-<section id="section-failures" class="failure-panel" aria-label="Failures" hidden><h2>Failed assertions</h2><div id="failure-table" class="failure-table"></div><h2 class="section-title">Execution errors</h2><div id="execution-errors"></div>{% if case.message %}<details class="technical"><summary>Original Robot Framework message</summary><pre class="code">{{ case.message }}</pre></details>{% endif %}</section>
+<section id="section-failures" class="failure-panel" aria-label="Failures" hidden><h2>Failed assertions</h2><div id="failure-table" class="failure-table"></div><h2 class="section-title">Failed HTTP attempts</h2><div id="request-errors"></div><h2 class="section-title">Execution errors</h2><div id="execution-errors"></div>{% if case.message %}<details class="technical"><summary>Original Robot Framework message</summary><pre class="code">{{ case.message }}</pre></details>{% endif %}</section>
 <footer class="small">One test case · {{ case.exchanges|length }} HTTP exchanges · Sensitive values are masked according to reporter configuration.</footer>
 <noscript><p>This interactive report requires JavaScript.</p><pre class="code">{{ case.message }}</pre></noscript>
 </main>
@@ -75,18 +75,21 @@ if(!Number.isNaN(started.getTime()))q('started').textContent=new Intl.DateTimeFo
 const checks=data.exchanges.flatMap(r=>r.validations);
 const failed=data.exchanges.flatMap((r,ri)=>r.validations.map((c,ci)=>({r,c,ri,ci})).filter(x=>x.c.status==='FAIL'));
 const errors=data.execution_errors||[];
+const attempts=data.request_errors||[];
 q('info-started').textContent=q('started').textContent;
 const affected=new Set(failed.map(x=>x.ri)).size;
 q('outcome').textContent=data.status==='SKIP'?'Test skipped.':failed.length?failed.length+' failed assertions across '+affected+' request'+(affected===1?'':'s')+'.':data.status==='FAIL'?'Test failed. See execution errors and the original Robot message.':checks.length?'All '+checks.length+' recorded assertions passed.':'Test passed; no assertions recorded.';
 if(errors.length)q('outcome').textContent+=' '+errors.length+' execution error'+(errors.length===1?'':'s')+' recorded.';
 q('request-overview').innerHTML=data.exchanges.length?'<table><thead><tr><th>Request</th><th>Method</th><th>HTTP status</th><th>Duration</th><th>Assertions</th></tr></thead><tbody>'+data.exchanges.map((r,i)=>{const pass=r.validations.filter(c=>c.status==='PASS').length;const fail=r.validations.length-pass;return '<tr><td><button data-overview-request="'+i+'">'+esc(r.name)+'</button></td><td>'+methodBadge(r.method)+'</td><td>'+statusBadge(r.status_code)+'</td><td>'+r.duration_ms+' ms</td><td>'+(r.validations.length?'<span class="pass">'+pass+' passed</span> · <span class="fail">'+fail+' failed</span>':'No assertions')+'</td></tr>';}).join('')+'</tbody></table>':'<p class="empty">No response was captured for this test.</p>';
 
-q('request-count').textContent=data.exchanges.length;
+q('request-count').textContent=data.exchanges.length+attempts.length;
+if(attempts.length){q('request-overview').insertAdjacentHTML('beforeend','<p class="notice">'+attempts.length+' HTTP attempt(s) without a response. <button data-section="failures">View attempt details</button></p>');}
+q('request-errors').innerHTML=attempts.length?attempts.map(a=>'<article class="error"><strong>'+esc(a.name)+'</strong><div>'+methodBadge(a.method)+' '+esc(a.url)+'</div><p>No response received</p><div>'+esc(a.message)+'</div></article>').join(''):'<p class="small">No failed HTTP attempts captured.</p>'; 
 q('assertion-count').textContent=checks.length;
 q('passed').textContent=checks.filter(c=>c.status==='PASS').length;
 q('failed').textContent=failed.length;
 q('failure-count').textContent='('+ (failed.length+errors.length) +')';
-if(failed.length||errors.length||data.status==='FAIL'){
+if(failed.length||errors.length||attempts.length||data.status==='FAIL'){
  q('failure-notice').innerHTML='<div class="notice">'+failed.length+' failed assertions · '+errors.length+' execution errors <button data-section="failures">View failures</button></div>';
 }
 q('failure-table').innerHTML=failed.length?'<table><thead><tr><th>Request / Assertion</th><th>Expected</th><th>Actual</th></tr></thead><tbody>'+failed.map(({r,c,ri,ci})=>'<tr><td><span class="small">'+esc(r.name)+'</span><br><button data-failure-request="'+ri+'" data-assertion="'+ci+'">'+esc(c.label)+'</button></td><td>'+esc(c.expected===null?'See assertion details':format(c.expected))+'</td><td>'+esc(format(c.actual))+'</td></tr>').join('')+'</tbody></table>':'<p class="small">No failed assertions recorded.</p>';
@@ -113,7 +116,7 @@ function jsonTree(value,label='JSON',depth=0){
 function renderBody(value){
  const key=selected+':'+tab;const term=searches.get(key)||'';
  const empty=value===null||value==='';const binary=typeof value==='string'&&value.startsWith('[Binary response:');
- q('content').innerHTML='<h2>'+(tab==='response'?'Response':'Request')+' body</h2>'+(empty?'<div class="empty">Body is empty.</div>':binary?'<div class="empty">'+esc(value)+' · Binary content is not embedded.</div>':'<div class="row body-tools"><input type="search" id="body-search" aria-label="Search body" placeholder="Search body" value="'+esc(term)+'"><button data-body-view="tree" aria-pressed="'+(bodyView==='tree')+'">Formatted</button><button data-body-view="raw" aria-pressed="'+(bodyView==='raw')+'">Raw</button><button data-copy="body" aria-label="Copy complete body">'+copyIcon+'</button></div><div id="body-search-status" role="status" class="small"></div><div id="body-content">'+(bodyView==='tree'&&typeof value==='object'?'<div class="json-tree">'+jsonTree(value)+'</div>':body(value))+'</div><div id="copy-status" role="status" class="small"></div>');
+ q('content').innerHTML='<h2>'+(tab==='response'?'Response':'Request')+' body</h2>'+(empty?'<div class="empty">Body is empty.</div>':binary?'<div class="empty">'+esc(value)+' · Binary content is not embedded.</div>':'<div class="row body-tools"><input type="search" id="body-search" aria-label="Search body" placeholder="Search body" value="'+esc(term)+'"><button data-body-view="tree" aria-pressed="'+(bodyView==='tree')+'">Formatted</button><button data-body-view="raw" aria-pressed="'+(bodyView==='raw')+'">Raw</button><button data-copy="body" aria-label="Copy complete body">'+copyIcon+'</button></div><div id="body-search-status" role="status" class="small"></div><div id="body-content">'+(bodyView==='tree'&&typeof value==='object'?'<div class="json-tree">'+jsonTree(value)+'</div>':bodyView==='tree'&&typeof value==='string'?'<details class="text-body" open><summary>Complete text body</summary>'+body(value)+'</details>':body(value))+'</div><div id="copy-status" role="status" class="small"></div>');
  if(!empty&&!binary)searchBody(term);
 }
 function searchBody(term){
