@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+from urllib.parse import parse_qsl, urlsplit
 
 from robot.api import ExecutionResult
 
@@ -47,6 +48,10 @@ def main() -> None:
         assert "fixture-secret-SECRET" not in html
         assert "query-secret-SECRET" not in html
         assert '<script>alert("unsafe")</script>' not in html
+        if data["name"] == "Failing distributor":
+            query = parse_qsl(urlsplit(data["exchanges"][-1]["url"]).query, keep_blank_values=True)
+            assert ("tag", "one") in query and ("tag", "two") in query and ("empty", "") in query
+            assert data["metadata"]["case_id"] == "DIST-002"
         errors = data["execution_errors"]
         if data["name"] in {"Failing distributor", "Empty fields", "Handled error"}:
             assert not errors, f"Assertions/handled failures duplicated: {data['name']}"

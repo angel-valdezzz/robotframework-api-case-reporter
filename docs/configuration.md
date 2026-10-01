@@ -4,7 +4,7 @@ La configuración se proporciona al importar la librería. No necesita un alias.
 
 ```robotframework
 *** Settings ***
-Library    APICaseReporter
+Library    RequestReporter
 ...    output_dir=${OUTPUT DIR}/cases
 ...    language=en
 ...    redact_headers=Authorization,Proxy-Authorization,Cookie,Set-Cookie,X-API-Key

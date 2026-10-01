@@ -19,6 +19,8 @@ jobs:
       - run: poetry check --lock
       - run: poetry run ruff check .
       - run: poetry run ruff format --check .
+      - run: poetry run robocop check tests
+      - run: poetry run robocop format --check tests
       - run: poetry run mypy src
       - run: poetry run python scripts/verify.py
       - run: poetry run python scripts/build_site.py

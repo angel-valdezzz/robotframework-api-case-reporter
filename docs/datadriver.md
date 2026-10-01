@@ -22,7 +22,7 @@ Distribuidor 1087,1087,AGENTE
 ```robotframework
 *** Settings ***
 Library          RequestsLibrary
-Library          APICaseReporter
+Library          RequestReporter
 Library          DataDriver    file=distributors.csv    dialect=excel
 Test Template    Verificar distribuidor
 
@@ -37,11 +37,11 @@ Verificar distribuidor
     [Arguments]    ${number}    ${expected_type}
     ${response}=    GET    ${BASE_URL}/distribuidores/${number}
     ...    expected_status=anything
-    ${id}=    Capture HTTP Exchange    Consultar distribuidor    ${response}
-    Check    ${id}    Código HTTP
+    ${id}=    Capture Response    Consultar distribuidor    ${response}
+    Assert    ${id}    Código HTTP
     ...    Should Be Equal As Integers    ${response.status_code}    200
     VAR    ${body}    ${response.json()}
-    Check    ${id}    Tipo de distribuidor
+    Assert    ${id}    Tipo de distribuidor
     ...    Should Be Equal As Strings    ${body}[tipoDistribuidor]    ${expected_type}
 ```
 
@@ -60,4 +60,4 @@ Obtendrás `Distribuidor_1042.html` y `Distribuidor_1087.html` dentro de
     Para Pabot usa una carpeta de reportes distinta por worker. La escritura
     concurrente en una misma carpeta no está soportada.
 
-[Ejemplo completo con API local](https://github.com/angel-valdezzz/robot-api-case-report/tree/dev){ .md-button }
+[Ejemplo completo con API local](https://github.com/angel-valdezzz/robotframework-api-testing/tree/main){ .md-button }

@@ -21,7 +21,7 @@ muestran Expected/Actual; otras keywords incluyen argumentos y mensaje de error.
 | Señal | Interpretación |
 |---|---|
 | PASS / FAIL / SKIP del encabezado | Estado final del caso de Robot |
-| PASS / FAIL de una assertion | Resultado de un `Check` ejecutado |
+| PASS / FAIL de una assertion | Resultado de un `Assert` ejecutado |
 | HTTP `2xx`, verde | Respuesta HTTP exitosa |
 | HTTP `3xx`, ámbar | Redirección |
 | HTTP `4xx` / `5xx`, rojo | Error HTTP del cliente o servidor |
@@ -38,10 +38,10 @@ no expresan el resultado del caso. Texto e iconos acompañan los colores.
 ## Failures
 
 La tabla contiene solo assertions fallidas. Cada fila enlaza a la request y la
-assertion exacta. Se genera con los datos capturados por `Check`; no requiere una
+assertion exacta. Se genera con los datos capturados por `Assert`; no requiere una
 keyword nueva ni repetir información en el `.robot`.
 
-**Execution errors** muestra fallos de keywords fuera de `Check`, como un timeout,
+**Execution errors** muestra fallos de keywords fuera de `Assert`, como un timeout,
 un error al interpretar JSON o un identificador de request desconocido. Se conservan
 el nombre de la keyword y el mensaje de Robot. Fallos manejados por TRY/EXCEPT o
 keywords de manejo de errores no se presentan como errores de ejecución sin manejar.
@@ -58,3 +58,7 @@ que ocurren fuera de la ejecución de keywords, por ejemplo al resolver una cond
 Puedes navegar con teclado. Las pestañas de una request aceptan flechas izquierda
 /derecha, Home y End. Los enlaces de fallos llevan el foco a la assertion. Ambos
 modos de color mantienen labels de estado y controles con nombres accesibles.
+
+## Request y Params
+
+El método y la URL están juntos; el icono junto a la URL copia la dirección ya protegida. HTTP status y duración de la respuesta se muestran debajo. **Params** presenta los query parameters de la URL enviada, incluidas claves repetidas y valores vacíos. La copia usa un array JSON para conservar las repeticiones. Los secretos se ocultan antes de mostrar o copiar los datos.

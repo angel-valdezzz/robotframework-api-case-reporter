@@ -23,11 +23,11 @@ La biblioteca declara `doc_format="MARKDOWN"`. Robot 7.5 soporta Markdown en los
 docstrings y la referencia se obtiene desde la librería instalada:
 
 ```bash
-poetry run python -m robot.libdoc APICaseReporter site/keywords/index.html
+poetry run python -m robot.libdoc RequestReporter site/keywords/index.html
 ```
 
 Markdown y Pygments son dependencias de documentación, no de ejecución. Los ejemplos
-usan bloques `robotframework`; `[Check]` enlaza una keyword en Libdoc. La importación
+usan bloques `robotframework`; `[Assert]` enlaza una keyword en Libdoc. La importación
 no crea archivos ni requiere un test activo, para poder generar la referencia.
 
 ## Actions
@@ -42,20 +42,20 @@ pull request y el check `verify`, sin aprobación externa obligatoria.
 
 ## Trusted Publishing
 
-La versión 0.2.0 se publicó mediante Trusted Publishing desde `release.yml`.
+La versión 0.3.0 se publicó mediante Trusted Publishing desde `release.yml`.
 Para configurar un publisher equivalente:
 
 | Campo | Valor |
 |---|---|
-| Project name | robotframework-api-case-reporter |
+| Project name | robotframework-request-reporter |
 | GitHub owner | angel-valdezzz |
-| Repository | robotframework-api-case-reporter |
+| Repository | robotframework-request-reporter |
 | Workflow filename | release.yml |
 | Environment name | pypi |
 
 El workflow ya utiliza OIDC y `pypa/gh-action-pypi-publish`, sin tokens guardados.
 Configurar el pending publisher no reserva el nombre. La publicación se ejecuta al
-publicar una release estable cuyo tag, por ejemplo `v0.2.0`, coincida con pyproject.toml.
+publicar una release estable cuyo tag, por ejemplo `v0.3.0`, coincida con pyproject.toml.
 
 El publisher inicial se registró sin restricción de environment (`Any`). El workflow
 usa el entorno `pypi`; se puede limitar el publisher a ese entorno.
@@ -63,6 +63,6 @@ No se requiere compartir una contraseña ni guardar un API token.
 
 ## Ejemplo instalado desde PyPI
 
-El repositorio [robot-api-case-report](https://github.com/angel-valdezzz/robot-api-case-report/tree/dev)
+El repositorio [robotframework-api-testing](https://github.com/angel-valdezzz/robotframework-api-testing/tree/main)
 instala la versión publicada, ejecuta una API local ficticia y verifica un caso
 individual y dos casos DataDriver. Cada caso genera su propio HTML.

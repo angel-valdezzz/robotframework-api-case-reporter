@@ -11,3 +11,5 @@ results/
 docs/keywords/index.html
 docs/examples/report.html
 docs/examples/skipped.html
+
+.robocop_cache/

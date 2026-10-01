@@ -7,14 +7,14 @@ Necesitas Python 3.12+ y Robot Framework 7.5+ dentro de la rama 7.x.
 === "Poetry"
 
     ```bash
-    poetry add robotframework-api-case-reporter==0.2.0 robotframework-requests
+    poetry add robotframework-request-reporter==0.3.0 robotframework-requests
     poetry run robot --version
     ```
 
 === "pip"
 
     ```bash
-    python -m pip install robotframework-api-case-reporter==0.2.0 robotframework-requests
+    python -m pip install robotframework-request-reporter==0.3.0 robotframework-requests
     python -m robot --version
     ```
 
@@ -23,20 +23,20 @@ reportera registra la evidencia de los responses que le entregas.
 
 ## Instalar un WHL
 
-Descarga la distribución desde [PyPI](https://pypi.org/project/robotframework-api-case-reporter/#files)
+Descarga la distribución desde [PyPI](https://pypi.org/project/robotframework-request-reporter/#files)
 o desde el artefacto `distribution` de GitHub Actions.
 
 === "Poetry"
 
     ```bash
-    poetry add ./robotframework_api_case_reporter-0.2.0-py3-none-any.whl
+    poetry add ./robotframework_request_reporter-0.3.0-py3-none-any.whl
     poetry add robotframework-requests
     ```
 
 === "pip"
 
     ```bash
-    python -m pip install ./robotframework_api_case_reporter-0.2.0-py3-none-any.whl
+    python -m pip install ./robotframework_request_reporter-0.3.0-py3-none-any.whl
     python -m pip install robotframework-requests
     ```
 
@@ -48,8 +48,8 @@ herramientas de documentación no son necesarias para ejecutar tus pruebas.
 ## Trabajar desde el código fuente
 
 ```bash
-git clone https://github.com/angel-valdezzz/robotframework-api-case-reporter.git
-cd robotframework-api-case-reporter
+git clone https://github.com/angel-valdezzz/robotframework-request-reporter.git
+cd robotframework-request-reporter
 git checkout main
 poetry install
 poetry build

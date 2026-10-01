@@ -1,15 +1,18 @@
 *** Settings ***
-Library          RequestsLibrary
-Library          APICaseReporter    WITH NAME    Report
-Library          support/LocalAPI.py
-Library          DataDriver    file=${CURDIR}/data.csv    encoding=utf-8
-Suite Setup      Prepare fixture
-Suite Teardown   Verify generated reports
-Test Template    Query from row
+Library           RequestsLibrary
+Library           APICaseReporter    WITH NAME    Report
+Library           support/LocalAPI.py
+Library           DataDriver    file=${CURDIR}/data.csv    encoding=utf-8
+
+Suite Setup       Prepare fixture
+Suite Teardown    Verify generated reports
+Test Template     Query from row
+
 
 *** Test Cases ***
 Distributor ${number}
     ${number}
+
 
 *** Keywords ***
 Prepare fixture

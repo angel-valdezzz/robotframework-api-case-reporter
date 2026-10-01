@@ -3,13 +3,14 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
-<title>{{ case.name }} — API case report</title>
+<title>{{ case.name }} — Test report</title>
 <style>
  :root{color-scheme:light;--bg:#f5f7fb;--panel:#fff;--text:#1c293c;--muted:#52627a;--line:#dce3ef;--accent:#344bc0;--soft:#edf0ff;--pass:#146c38;--pass-bg:#e7f5eb;--fail:#b42332;--fail-bg:#ffeaec;--skip:#805b00;--skip-bg:#fff2c2}
 :root[data-theme=dark]{color-scheme:dark;--bg:#121923;--panel:#1d2736;--text:#eff3fa;--muted:#a8b8cd;--line:#354359;--accent:#a6b6ff;--soft:#2a3653;--pass:#97e4af;--pass-bg:#193d2b;--fail:#ff9eaa;--fail-bg:#4a2530;--skip:#f3d16e;--skip-bg:#423819}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.55 system-ui,sans-serif}main{max-width:1100px;margin:auto;padding:24px}h1{font-size:24px;margin:0 0 6px}h2{font-size:17px;margin:0 0 12px}h3{font-size:14px;margin:0}button{font:inherit;min-height:42px;border:1px solid var(--line);border-radius:8px;padding:8px 12px;background:var(--panel);color:var(--text);cursor:pointer}button:hover{background:var(--soft)}button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}button[aria-selected=true],button[aria-pressed=true]{background:var(--soft);border-color:var(--accent);color:var(--accent)}.small{color:var(--muted);font-size:12px}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.badge{background:var(--panel);padding:3px 8px;border-radius:5px;font-size:12px;font-weight:650}.pass{color:var(--pass)}.fail{color:var(--fail)}.skip{color:var(--skip)}.badge.pass{background:var(--pass-bg)}.badge.fail{background:var(--fail-bg)}.badge.skip{background:var(--skip-bg)}.stat.pass-stat{border-top:3px solid var(--pass)}.stat.fail-stat{border-top:3px solid var(--fail)}.case-message.skip{border-color:var(--skip);background:var(--skip-bg)}.requests small.pass{color:var(--pass)}.requests small.fail{color:var(--fail)}.requests button:has(.fail){border-left:3px solid var(--fail)}.requests button:has(.pass){border-left:3px solid var(--pass)}.theme-control{margin-left:auto}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}.stat{padding:14px;background:var(--panel);border:1px solid var(--line);border-radius:10px}.stat strong{display:block;font-size:24px}.meta{display:flex;gap:8px 20px;flex-wrap:wrap;margin:12px 0;overflow-wrap:anywhere}.error{background:var(--panel);border-left:3px solid var(--fail);padding:12px;margin:14px 0;white-space:pre-wrap;overflow-wrap:anywhere}.layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:16px}.requests{display:flex;flex-direction:column;gap:8px}.requests button{text-align:left}.requests small{display:block;color:var(--muted)}.detail{min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px}.url{background:var(--bg);padding:12px;border-radius:7px;overflow-wrap:anywhere}.url code{font-size:12px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.code{background:var(--bg);padding:14px;border-radius:7px;white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.65 ui-monospace,monospace;margin:0}.key{color:var(--accent)}.string{color:var(--pass)}table{border-collapse:collapse;table-layout:fixed;width:100%;font-size:13px}th,td{padding:10px 5px;border-bottom:1px solid var(--line);text-align:left;overflow-wrap:anywhere;vertical-align:top}th{color:var(--muted);font-weight:500}.validation{padding:12px 0;border-bottom:1px solid var(--line)}.validation p{margin:5px 0 0 20px;white-space:pre-wrap;overflow-wrap:anywhere}textarea{width:100%;min-height:100px;font:inherit;background:var(--bg);color:var(--text)}footer{margin-top:20px}.empty{padding:16px;color:var(--muted)}@media(max-width:700px){main{padding:14px}.layout{grid-template-columns:1fr}.requests{flex-direction:row;flex-wrap:wrap}.requests button{flex:1;min-width:145px}.stats{grid-template-columns:repeat(2,1fr)}.detail{padding:14px}h1{font-size:20px}}
 
 [hidden]{display:none!important}.sections{display:flex;gap:8px;margin:20px 0}.sections button{font-weight:650}.summary-panel,.failure-panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px}.summary-panel p{margin:8px 0}.section-title{margin-top:20px}.method{font-weight:750;letter-spacing:.03em}.method-get{color:var(--pass);background:var(--pass-bg)}.method-post{color:var(--skip);background:var(--skip-bg)}.method-put,.method-head,.http-info{color:var(--accent);background:var(--soft)}.method-patch,.method-options{color:var(--skip);background:var(--skip-bg)}.method-delete{color:var(--fail);background:var(--fail-bg)}.http-success{color:var(--pass);background:var(--pass-bg)}.http-redirect{color:var(--skip);background:var(--skip-bg)}.http-error{color:var(--fail);background:var(--fail-bg)}.failure-table{overflow:auto}.failure-table table{min-width:540px}.failure-table button{border:0;padding:0;min-height:32px;background:none;color:var(--accent);text-align:left;text-decoration:underline}.technical{margin-top:18px}.technical summary{cursor:pointer;color:var(--muted)}.notice{padding:12px 16px;background:var(--fail-bg);border-left:3px solid var(--fail);border-radius:6px;margin-top:16px}.validation:focus{outline:2px solid var(--accent);outline-offset:5px}.summary-actions{margin-top:16px}.requests button .badge{display:inline-block}.stats{margin-top:0}
+.request-line{display:flex;align-items:center;gap:12px}.request-line code{flex:1;min-width:0;font-size:13px}.request-result{display:flex;align-items:center;gap:12px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}.copy-url{flex-shrink:0;display:grid;place-items:center}.url-status{margin-top:8px}.params-heading{display:flex;align-items:center;gap:10px;margin-bottom:12px}@media(max-width:700px){.request-line{flex-wrap:wrap}.request-line code{flex-basis:70%}}
 </style>
 <script>
 (()=>{let theme=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';try{const stored=localStorage.getItem('api-case-reporter-theme');if(stored==='light'||stored==='dark')theme=stored;}catch(error){}document.documentElement.dataset.theme=theme;})();
@@ -17,7 +18,7 @@
 </head>
 <body>
 <main>
-<header><div class="row"><h1>{{ case.name }}</h1><span class="badge {{ case.status|lower }}">{{ case.status }}</span><button type="button" id="theme-toggle" class="theme-control" aria-label="Switch color theme">Light / Dark</button></div><div class="small"><time id="started" datetime="{{ case.started }}">{{ case.started }}</time> · Robot Framework API case report</div></header>
+<header><div class="row"><h1>{{ case.name }}</h1><span class="badge {{ case.status|lower }}">{{ case.status }}</span><button type="button" id="theme-toggle" class="theme-control" aria-label="Switch color theme">Light / Dark</button></div><div class="small"><time id="started" datetime="{{ case.started }}">{{ case.started }}</time></div></header>
 <nav class="sections" aria-label="Report sections"><button data-section="summary" aria-pressed="true">Summary</button><button data-section="requests" aria-pressed="false">Requests</button><button data-section="failures" aria-pressed="false">Failures <span id="failure-count"></span></button></nav>
 <section id="section-summary" aria-label="Summary">
 <div class="stats">
@@ -26,16 +27,16 @@
 <div class="stat pass-stat"><span class="small">Passed assertions</span><strong class="pass" id="passed"></strong></div>
 <div class="stat fail-stat"><span class="small">Failed assertions</span><strong class="fail" id="failed"></strong></div>
 </div>
-<div class="summary-panel"><h2>Case information</h2><p><span class="small">Case duration</span> · <strong>{{ '%.2f'|format(case.duration_ms / 1000) }} s</strong></p><p class="small">Each request includes its HTTP response time. HTTP status and assertion results are independent.</p>
-{% if case.metadata %}<div class="meta" aria-label="Case metadata">{% for key,value in case.metadata.items() %}<span><span class="small">{{ key }}:</span> {{ value }}</span>{% endfor %}</div>{% endif %}
+<div class="summary-panel"><h2>Test case information</h2><p><span class="small">Test case duration</span> · <strong>{{ '%.2f'|format(case.duration_ms / 1000) }} s</strong></p><p class="small">Each request includes its HTTP response time. HTTP status and assertion results are independent.</p>
+{% if case.metadata %}<div class="meta" aria-label="Test case metadata">{% for key,value in case.metadata.items() %}<span><span class="small">{{ key }}:</span> {{ value }}</span>{% endfor %}</div>{% endif %}
 {% if case.status == 'SKIP' and case.message %}<div class="error case-message skip">{{ case.message }}</div>{% endif %}
 <div id="failure-notice"></div><div class="row summary-actions"><button data-section="requests">View requests</button></div></div>
 </section>
-<section id="section-requests" aria-label="Requests" hidden><div class="layout"><nav class="requests" id="requests" aria-label="Case requests"></nav><section class="detail" aria-label="Selected request"><div id="url" class="url"></div><div class="tabs" role="tablist" aria-label="Request details">
-{% for name in ['Response','Request','Headers','Assertions'] %}<button type="button" role="tab" id="tab-{{ name|lower }}" data-tab="{{ name|lower }}" tabindex="{{ '0' if loop.first else '-1' }}" aria-selected="{{ 'true' if loop.first else 'false' }}" aria-controls="content">{{ name }}</button>{% endfor %}
+<section id="section-requests" aria-label="Requests" hidden><div class="layout"><nav class="requests" id="requests" aria-label="Test case requests"></nav><section class="detail" aria-label="Selected request"><div id="url" class="url"></div><div class="tabs" role="tablist" aria-label="Request details">
+{% for name in ['Response','Request','Params','Headers','Assertions'] %}<button type="button" role="tab" id="tab-{{ name|lower }}" data-tab="{{ name|lower }}" tabindex="{{ '0' if loop.first else '-1' }}" aria-selected="{{ 'true' if loop.first else 'false' }}" aria-controls="content">{{ name }}</button>{% endfor %}
 </div><div id="content" role="tabpanel" aria-labelledby="tab-response" tabindex="0"></div></section></div></section>
 <section id="section-failures" class="failure-panel" aria-label="Failures" hidden><h2>Failed assertions</h2><div id="failure-table" class="failure-table"></div><h2 class="section-title">Execution errors</h2><div id="execution-errors"></div>{% if case.message %}<details class="technical"><summary>Original Robot Framework message</summary><pre class="code">{{ case.message }}</pre></details>{% endif %}</section>
-<footer class="small">One case · {{ case.exchanges|length }} HTTP exchanges · Sensitive values are masked according to reporter configuration.</footer>
+<footer class="small">One test case · {{ case.exchanges|length }} HTTP exchanges · Sensitive values are masked according to reporter configuration.</footer>
 <noscript><p>This interactive report requires JavaScript.</p><pre class="code">{{ case.message }}</pre></noscript>
 </main>
 <script type="application/json" id="case-data">{{ case|tojson }}</script>
@@ -89,6 +90,7 @@ function statusBadge(status){
  const kind=status>=100&&status<200?'info':status>=200&&status<300?'success':status>=300&&status<400?'redirect':status>=400&&status<600?'error':'';
  return '<span class="badge '+(kind?'http-'+kind:'')+'">HTTP '+esc(status)+'</span>';
 }
+function queryParams(url){try{return [...new URL(url).searchParams].map(([name,value])=>({name,value}));}catch(error){return [];}}
 function render(){
  q('requests').innerHTML=data.exchanges.map((r,i)=>{
   const failed=r.validations.some(c=>c.status==='FAIL');
@@ -105,7 +107,8 @@ function render(){
   q('content').innerHTML='<div class="empty">No response was captured for this case. See Summary and Failures for its final outcome.</div>';return;
  }
  const r=data.exchanges[selected];
- q('url').innerHTML='<div class="row">'+methodBadge(r.method)+statusBadge(r.status_code)+'<span class="small">'+r.duration_ms+' ms</span></div><code>'+esc(r.url)+'</code>';
+ q('url').innerHTML='<div class="request-line">'+methodBadge(r.method)+'<code>'+esc(r.url)+'</code><button class="copy-url" data-copy="url" aria-label="Copy request URL" title="Copy request URL">'+copyIcon+'</button></div><div class="request-result"><span class="small">Response</span>'+statusBadge(r.status_code)+'<span class="small">'+r.duration_ms+' ms</span></div><div id="url-copy-status" class="small url-status" role="status"></div>';
+ if(tab==='params'){const params=queryParams(r.url);q('content').innerHTML='<div class="params-heading"><h2>Query parameters</h2><button data-copy="params" aria-label="Copy query parameters as JSON">'+copyIcon+'</button></div><p class="small">From the final request URL. Repeated names and empty values are preserved.</p>'+(params.length?'<table><thead><tr><th>Name</th><th>Value</th></tr></thead><tbody>'+params.map(p=>'<tr><td>'+esc(p.name)+'</td><td>'+esc(p.value)+'</td></tr>').join('')+'</tbody></table>':'<div class="empty">No query parameters</div>')+'<div id="copy-status" role="status" class="small"></div>';}
  if(tab==='response'||tab==='request')q('content').innerHTML='<h2>'+(tab==='response'?'Response':'Request')+' body</h2>'+body(r[tab+'_body']);
  if(tab==='assertions')q('content').innerHTML=r.validations.length?r.validations.map((c,i)=>'<article class="validation" id="assertion-'+i+'" tabindex="-1"><strong class="'+(c.status==='PASS'?'pass':'fail')+'">'+(c.status==='PASS'?'✓':'×')+' '+c.status+' · '+esc(c.label)+'</strong><p class="small">Keyword: '+esc(c.keyword)+(c.expected!==null?'<br>Expected: '+esc(format(c.expected)):'')+'<br>Actual: '+esc(format(c.actual))+(c.expected===null?'<br>Arguments: '+esc(format(c.arguments)):'')+'</p>'+(c.error?'<div class="error">'+esc(c.error)+'</div>':'')+'</article>').join(''):'<div class="empty">No assertions recorded for this request.</div>';
  if(tab==='headers')q('content').innerHTML='<div class="row"><button data-view="table" aria-pressed="'+(view==='table')+'">Table</button><button data-view="raw" aria-pressed="'+(view==='raw')+'">JSON</button></div>'+['request','response'].map(side=>{
@@ -124,15 +127,18 @@ document.addEventListener('click',async e=>{
  else if(b.dataset.tab){tab=b.dataset.tab;render();}
  else if(b.dataset.view){view=b.dataset.view;render();}
  else if(b.dataset.copy){
-  const text=JSON.stringify(data.exchanges[selected][b.dataset.copy+'_headers'],null,2);
+  const r=data.exchanges[selected];
+  const type=b.dataset.copy;
+  const text=type==='url'?r.url:JSON.stringify(type==='params'?queryParams(r.url):r[type+'_headers'],null,2);
+  const status=type==='url'?q('url-copy-status'):q('copy-status');
   try{
    if(!navigator.clipboard)throw Error('Clipboard unavailable');
    await navigator.clipboard.writeText(text);
-   if(q('copy-status'))q('copy-status').textContent='Headers copied as JSON';
+   if(status)status.textContent=type==='url'?'Request URL copied':type==='params'?'Query parameters copied as JSON':'Headers copied as JSON';
   }catch(error){
-   if(q('copy-status')){
-    q('copy-status').innerHTML='<label>Copy manually<textarea readonly>'+esc(text)+'</textarea></label>';
-    const field=q('copy-status').querySelector('textarea');field.focus();field.select();
+   if(status){
+    status.innerHTML='<label>Copy manually<textarea readonly>'+esc(text)+'</textarea></label>';
+    const field=status.querySelector('textarea');field.focus();field.select();
    }
   }
  }

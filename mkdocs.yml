@@ -1,10 +1,10 @@
-site_name: API Case Reporter
+site_name: Robot Framework Request Reporter
 site_description: Evidencia API de Robot Framework, un HTML por caso
-site_url: https://angel-valdezzz.github.io/robotframework-api-case-reporter/
-repo_url: https://github.com/angel-valdezzz/robotframework-api-case-reporter
-repo_name: angel-valdezzz/robotframework-api-case-reporter
+site_url: https://angel-valdezzz.github.io/robotframework-request-reporter/
+repo_url: https://github.com/angel-valdezzz/robotframework-request-reporter
+repo_name: angel-valdezzz/robotframework-request-reporter
 edit_uri: edit/main/docs/
-copyright: API Case Reporter · Robot Framework API evidence
+copyright: Robot Framework Request Reporter · Robot Framework API evidence
 extra_css:
   - assets/stylesheets/extra.css
 theme:
