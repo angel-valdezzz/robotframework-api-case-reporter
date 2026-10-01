@@ -1,15 +1,15 @@
-# Robot Framework Robot Framework Request Reporter
+# Robot Framework Request Reporter
 
 One standalone HTML evidence report per Robot Framework test case. Supports
 RequestsLibrary responses, multiple HTTP requests, business assertions, metadata,
 JSON formatting, request/response headers, Table/JSON and Copy.
 
-Version 0.3.0 targets Python 3.12+ and Robot Framework 7.5+. No pytest adapter.
+Version 0.3.1 targets Python 3.12+ and Robot Framework 7.5+. No pytest adapter.
 
 ## Install
 
 ```bash
-pip install robotframework-request-reporter==0.3.0
+pip install robotframework-request-reporter==0.3.1
 pip install robotframework-requests
 ```
 
@@ -64,7 +64,7 @@ ignoring the Robot exit code. No live credentials or external endpoints are used
 - HTTP transport errors without a Response appear in the final case error, with no
   fabricated request. Keys missing before Assert executes appear as Robot errors.
 - Pabot processes are supported with distinct output directories per worker. Sharing
-  one physical report directory across concurrent writers is not supported in 0.2.
+  one physical report directory across concurrent writers is not supported in 0.3.
 - Light/Dark control follows the system initially and remembers your choice when storage is available.
 - PASS, FAIL and SKIP use green, red and amber with distinct shades in both themes.
 

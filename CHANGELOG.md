@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.1
+
+- Correct duplicate Robot Framework wording in the README displayed on PyPI.
+- Refresh current version references in installation and configuration documentation.
+
 ## 0.3.0
 
 - Rename distribution to robotframework-request-reporter and public import to RequestReporter. Python implementation lives in request_reporter.
