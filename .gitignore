@@ -13,3 +13,5 @@ docs/examples/report.html
 docs/examples/skipped.html
 
 .robocop_cache/
+
+docs/examples/passing.html

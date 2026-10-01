@@ -23,6 +23,11 @@ jobs:
       - run: poetry run robocop format --check tests
       - run: poetry run mypy src
       - run: poetry run python scripts/verify.py
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - run: npm install --prefix build/ui-check jsdom@26.1.0 --no-audit --no-fund
+      - run: NODE_PATH="$PWD/build/ui-check/node_modules" node scripts/verify_ui.cjs
       - run: poetry run python scripts/build_site.py
       - run: poetry build
       - run: poetry run twine check dist/*

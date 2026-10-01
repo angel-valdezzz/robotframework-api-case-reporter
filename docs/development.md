@@ -42,7 +42,7 @@ pull request y el check `verify`, sin aprobación externa obligatoria.
 
 ## Trusted Publishing
 
-La versión 0.3.1 se publicó mediante Trusted Publishing desde `release.yml`.
+La versión 0.4.0 se publicó mediante Trusted Publishing desde `release.yml`.
 Para configurar un publisher equivalente:
 
 | Campo | Valor |
@@ -55,7 +55,7 @@ Para configurar un publisher equivalente:
 
 El workflow ya utiliza OIDC y `pypa/gh-action-pypi-publish`, sin tokens guardados.
 Configurar el pending publisher no reserva el nombre. La publicación se ejecuta al
-publicar una release estable cuyo tag, por ejemplo `v0.3.1`, coincida con pyproject.toml.
+publicar una release estable cuyo tag, por ejemplo `v0.4.0`, coincida con pyproject.toml.
 
 El publisher inicial se registró sin restricción de environment (`Any`). El workflow
 usa el entorno `pypi`; se puede limitar el publisher a ese entorno.
@@ -66,3 +66,7 @@ No se requiere compartir una contraseña ni guardar un API token.
 El repositorio [robotframework-api-testing](https://github.com/angel-valdezzz/robotframework-api-testing/tree/main)
 instala la versión publicada, ejecuta una API local ficticia y verifica un caso
 individual y dos casos DataDriver. Cada caso genera su propio HTML.
+
+## Cambio de compatibilidad en 0.4
+
+La versión 0.4 retira las keywords de compatibilidad anteriores. Las suites y recursos deben usar Capture Response y Assert. El import público es RequestReporter.

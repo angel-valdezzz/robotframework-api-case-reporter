@@ -64,6 +64,14 @@ class LocalAPI:
                             "tipoPersona": "FISICA",
                             "rfc": "" if failed else "AAAA900101AB1",
                             "curp": "AAAA900101HDFXXX01",
+                            "registration": {
+                                "folio": "ALT-1042",
+                                "office": {"name": "Centro", "active": True},
+                            },
+                            "contacts": [
+                                {"type": "email", "value": "demo@example.test"},
+                                {"type": "phone", "value": "5550000000"},
+                            ],
                         },
                     )
 
